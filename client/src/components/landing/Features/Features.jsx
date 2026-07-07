@@ -54,7 +54,7 @@ const features = [
 
 const Features = () => {
   return (
-    <section className="bg-slate-50 py-24">
+    <section className="bg-slate-50 py-20">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-16 text-center">
           <h2 className="text-4xl font-bold text-gray-900">
