@@ -1,16 +1,19 @@
-export const register = async (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Register API Working",
-  });
-};
+import asyncHandler from "../utils/asyncHandler.js";
+import {
+  registerUser,
+  loginUser,
+} from "../services/auth.service.js";
+export const register = asyncHandler(async (req, res) => {
+  const result = await registerUser(req.body);
 
-export const login = async (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Login API Working",
-  });
-};
+  return res.status(201).json(result);
+});
+
+export const login = asyncHandler(async (req, res) => {
+  const result = await loginUser(req.body);
+
+  return res.status(200).json(result);
+});
 
 export const forgotPassword = async (req, res) => {
   res.status(200).json({
