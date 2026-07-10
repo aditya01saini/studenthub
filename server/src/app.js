@@ -3,7 +3,7 @@ import cors from "cors";
 import errorHandler from "./middlewares/error.middleware.js";
 
 import authRoutes from "./routes/auth.routes.js";
-
+import studentRoutes from "./routes/student.routes.js";
 const app = express();
 
 app.use(cors());
@@ -19,6 +19,7 @@ app.get("/", (req, res) => {
 
 
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/student", studentRoutes);
 app.use(errorHandler);
 
 export default app;
