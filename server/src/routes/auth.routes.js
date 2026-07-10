@@ -1,23 +1,21 @@
 import express from "express";
+import { protect } from "../middlewares/auth.middleware.js";
 import {
   register,
   login,
   forgotPassword,
   resetPassword,
+   getMe,
 } from "../controllers/auth.controller.js";
 
 const router = express.Router();
 
-// Register
 router.post("/register", register);
-
-// Login
 router.post("/login", login);
 
-// Forgot Password
-router.post("/forgot-password", forgotPassword);
+router.get("/me", protect, getMe);
 
-// Reset Password
+router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);
 
 export default router;
