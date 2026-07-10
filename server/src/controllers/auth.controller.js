@@ -28,3 +28,10 @@ export const resetPassword = async (req, res) => {
     message: "Reset Password API Working",
   });
 };
+
+export const getMe = asyncHandler(async (req, res) => {
+  res.status(200).json({
+    success: true,
+    user: req.user,
+  });
+});
