@@ -17,6 +17,7 @@ const recruiterProfileSchema = new mongoose.Schema(
 
     website: {
       type: String,
+      trim: true,
       default: "",
     },
 
@@ -32,11 +33,13 @@ const recruiterProfileSchema = new mongoose.Schema(
 
     location: {
       type: String,
+      trim: true,
       default: "",
     },
 
     description: {
       type: String,
+      trim: true,
       default: "",
     },
 
@@ -47,12 +50,12 @@ const recruiterProfileSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const RecruiterProfile = mongoose.model(
   "RecruiterProfile",
-  recruiterProfileSchema
+  recruiterProfileSchema,
 );
 
 export default RecruiterProfile;
