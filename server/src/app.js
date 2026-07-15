@@ -8,6 +8,7 @@ import authRoutes from "./routes/auth.routes.js";
 import studentRoutes from "./routes/student.routes.js";
 
 import recruiterRoutes from "./routes/recruiter.routes.js";
+import noteRoutes from "./routes/note.routes.js";
 const app = express();
 
 app.use(cors());
@@ -27,6 +28,7 @@ app.use("/api/v1/student", studentRoutes);
 app.use("/api/v1/recruiter", recruiterRoutes);
 app.use("/api/v1/internships", internshipRoutes);
 app.use("/api/v1/applications", applicationRoutes);
+app.use("/api/v1/notes", noteRoutes);
 app.use(errorHandler);
 
 export default app;
