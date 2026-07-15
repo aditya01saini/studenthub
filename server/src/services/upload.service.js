@@ -11,6 +11,7 @@ export const uploadToCloudinary = async (
       folder,
       resource_type: resourceType,
     });
+  
 
     fs.unlinkSync(filePath);
 
