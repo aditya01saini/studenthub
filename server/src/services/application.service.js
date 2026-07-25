@@ -1,3 +1,4 @@
+import { createNotification } from "./notification.service.js";
 import Application from "../models/Application.js";
 import Internship from "../models/Internship.js";
 import StudentProfile from "../models/StudentProfile.js";
@@ -45,6 +46,17 @@ export const applyInternship = async (userId, internshipId, coverLetter) => {
     throw error;
   }
 
+  // Recruiter Profile for Notification
+  const recruiter = await RecruiterProfile.findById(
+    internship.recruiter,
+  ).select("user");
+
+  if (!recruiter) {
+    const error = new Error("Recruiter profile not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
   // Check Existing Application
   const existingApplication = await Application.findOne({
     student: student._id,
@@ -72,6 +84,17 @@ export const applyInternship = async (userId, internshipId, coverLetter) => {
     internship.applicantsCount += 1;
     await internship.save();
 
+    // Create Notification for Recruiter
+    await createNotification({
+      recipient: recruiter.user,
+      sender: student.user,
+      type: "APPLICATION_RECEIVED",
+      title: "New Internship Application",
+      message: `A student has re-applied for ${internship.title}.`,
+      application: existingApplication._id,
+      internship: internship._id,
+    });
+
     return {
       success: true,
       message: "Application submitted successfully.",
@@ -90,6 +113,17 @@ export const applyInternship = async (userId, internshipId, coverLetter) => {
 
   internship.applicantsCount += 1;
   await internship.save();
+
+  // Create Notification for Recruiter
+  await createNotification({
+    recipient: recruiter.user,
+    sender: student.user,
+    type: "APPLICATION_RECEIVED",
+    title: "New Internship Application",
+    message: `A student has applied for ${internship.title}.`,
+    application: application._id,
+    internship: internship._id,
+  });
 
   return {
     success: true,
@@ -272,8 +306,10 @@ export const updateApplicationStatus = async (
   }
 
   // Application
-  const application = await Application.findById(applicationId);
-
+  const application = await Application.findById(applicationId).populate({
+    path: "student",
+    select: "user",
+  });
   if (!application) {
     const error = new Error("Application not found.");
     error.statusCode = 404;
@@ -317,6 +353,36 @@ export const updateApplicationStatus = async (
   application.reviewedAt = new Date();
 
   await application.save();
+
+  // Notification type based on application status
+  const notificationTypes = {
+    Shortlisted: "APPLICATION_SHORTLISTED",
+    Accepted: "APPLICATION_ACCEPTED",
+    Rejected: "APPLICATION_REJECTED",
+  };
+
+  const notificationTitles = {
+    Shortlisted: "Application Shortlisted",
+    Accepted: "Application Accepted",
+    Rejected: "Application Rejected",
+  };
+
+  const notificationMessages = {
+    Shortlisted: "Your internship application has been shortlisted.",
+    Accepted: "Congratulations! Your internship application has been accepted.",
+    Rejected: "Your internship application has been rejected.",
+  };
+
+  // Create Notification for Student
+  await createNotification({
+    recipient: application.student.user,
+    sender: recruiter.user,
+    type: notificationTypes[status],
+    title: notificationTitles[status],
+    message: notificationMessages[status],
+    application: application._id,
+    internship: application.internship,
+  });
 
   return {
     success: true,
