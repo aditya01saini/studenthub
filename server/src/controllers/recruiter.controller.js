@@ -4,7 +4,8 @@ import {
   updateProfile,
   updateCompanyLogo,
   deleteCompanyLogo,
-  getPublicProfile
+  getPublicProfile,
+  getRecruiterDashboard,
 } from "../services/recruiter.service.js";
 
 export const getRecruiterProfile = asyncHandler(async (req, res) => {
@@ -36,3 +37,13 @@ export const getPublicRecruiterProfile = asyncHandler(async (req, res) => {
 
   return res.status(200).json(result);
 });
+
+export const getRecruiterDashboardData = asyncHandler(
+  async (req, res) => {
+    const result = await getRecruiterDashboard(
+      req.user._id
+    );
+
+    return res.status(200).json(result);
+  }
+);
