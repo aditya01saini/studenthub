@@ -74,6 +74,16 @@ applicationSchema.index(
   }
 );
 
+applicationSchema.index({
+  student: 1,
+  status: 1,
+});
+
+applicationSchema.index({
+  recruiter: 1,
+  status: 1,
+});
+
 const Application = mongoose.model(
   "Application",
   applicationSchema
