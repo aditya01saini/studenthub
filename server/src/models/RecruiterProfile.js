@@ -47,6 +47,20 @@ const recruiterProfileSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+
+    isVerifiedCompany: {
+      type: Boolean,
+      default: false,
+    },
+    activeInternshipsCount: {
+      type: Number,
+      default: 0,
+    },
+
+    totalHires: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
