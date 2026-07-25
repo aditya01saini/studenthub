@@ -75,6 +75,11 @@ const noteSchema = new mongoose.Schema(
       default: 0,
     },
 
+    bookmarksCount: {
+      type: Number,
+      default: 0,
+    },
+
     viewsCount: {
       type: Number,
       default: 0,
@@ -87,8 +92,22 @@ const noteSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
+
+noteSchema.index({
+  uploadedBy: 1,
+  isActive: 1,
+});
+
+noteSchema.index({
+  subject: 1,
+});
+
+noteSchema.index({
+  branch: 1,
+});
+
 
 const Note = mongoose.model("Note", noteSchema);
 
