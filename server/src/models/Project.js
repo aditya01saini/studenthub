@@ -88,15 +88,35 @@ const projectSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+
+    bookmarksCount: {
+      type: Number,
+      default: 0,
+    },
+    projectStatus: {
+      type: String,
+      enum: ["Completed", "In Progress"],
+      default: "Completed",
+    },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-const Project = mongoose.model(
-  "Project",
-  projectSchema
-);
+projectSchema.index({
+  uploadedBy: 1,
+  isActive: 1,
+});
+
+projectSchema.index({
+  category: 1,
+});
+
+projectSchema.index({
+  featured: 1,
+});
+
+const Project = mongoose.model("Project", projectSchema);
 
 export default Project;
