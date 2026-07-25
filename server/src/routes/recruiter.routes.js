@@ -6,6 +6,7 @@ import {
   uploadRecruiterCompanyLogo,
   deleteRecruiterCompanyLogo,
   getPublicRecruiterProfile,
+  getRecruiterDashboardData,
 } from "../controllers/recruiter.controller.js";
 import { protect } from "../middlewares/auth.middleware.js";
 import authorize from "../middlewares/role.middleware.js";
@@ -27,6 +28,12 @@ router.delete(
   protect,
   authorize("recruiter"),
   deleteRecruiterCompanyLogo,
+);
+router.get(
+  "/dashboard",
+  protect,
+  authorize("recruiter"),
+  getRecruiterDashboardData
 );
 
 router.get("/:recruiterId", getPublicRecruiterProfile);
