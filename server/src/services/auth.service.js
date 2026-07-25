@@ -3,7 +3,6 @@ import StudentProfile from "../models/StudentProfile.js";
 import RecruiterProfile from "../models/RecruiterProfile.js";
 import jwt from "jsonwebtoken";
 
-
 export const registerUser = async (userData) => {
   const { fullName, email, password, role, companyName } = userData;
 
@@ -42,7 +41,7 @@ export const registerUser = async (userData) => {
   return {
     success: true,
     message: "Account created successfully",
-    user: userResponse
+    user: userResponse,
   };
 };
 
@@ -57,12 +56,24 @@ export const loginUser = async (userData) => {
     throw new Error("Invalid email or password");
   }
 
+  // Check account status
+  if (!user.isActive) {
+    throw new Error(
+      "Your account has been deactivated. Please contact support.",
+    );
+  }
+
   // Compare Password
   const isMatch = await user.comparePassword(password);
 
   if (!isMatch) {
     throw new Error("Invalid email or password");
   }
+
+  // Update Last Login
+  user.lastLoginAt = new Date();
+
+  await user.save();
 
   // Generate JWT Token
   const token = jwt.sign(
@@ -73,7 +84,7 @@ export const loginUser = async (userData) => {
     process.env.JWT_SECRET,
     {
       expiresIn: "7d",
-    }
+    },
   );
 
   // Remove Password
