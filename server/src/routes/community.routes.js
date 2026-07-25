@@ -5,6 +5,11 @@ import {
   unfollowStudentController,
   getStudentFollowersController,
   getStudentFollowingController,
+  bookmarkResourceController,
+  removeBookmarkController,
+  getMyBookmarksController,
+  getCommunityFeedController,
+  getFollowStatusController,
 } from "../controllers/community.controller.js";
 
 import { protect } from "../middlewares/auth.middleware.js";
@@ -34,4 +39,38 @@ router.get("/students/:studentId/followers", getStudentFollowersController);
 // Get Student Following
 router.get("/students/:studentId/following", getStudentFollowingController);
 
+// Get Logged-in Student Bookmarks
+router.get(
+  "/bookmarks",
+  protect,
+  authorize("student"),
+  getMyBookmarksController,
+);
+
+// Bookmark Project / Note / Internship
+router.post(
+  "/bookmarks/:resourceType/:resourceId",
+  protect,
+  authorize("student"),
+  bookmarkResourceController,
+);
+
+// Remove Bookmark
+router.delete(
+  "/bookmarks/:resourceType/:resourceId",
+  protect,
+  authorize("student"),
+  removeBookmarkController,
+);
+
+// Community Feed
+router.get("/feed", protect, authorize("student"), getCommunityFeedController);
+
+// Check Follow Status
+router.get(
+  "/students/:studentId/follow-status",
+  protect,
+  authorize("student"),
+  getFollowStatusController,
+);
 export default router;
