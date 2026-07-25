@@ -1,6 +1,10 @@
 import Follow from "../models/Follow.js";
 import StudentProfile from "../models/StudentProfile.js";
 import { createNotification } from "./notification.service.js";
+import Bookmark from "../models/Bookmark.js";
+import Project from "../models/Project.js";
+import Note from "../models/Note.js";
+import Internship from "../models/Internship.js";
 
 // Follow Student
 export const followStudent = async (userId, targetStudentId) => {
@@ -237,5 +241,302 @@ export const getStudentFollowing = async (targetStudentId) => {
     success: true,
     count: following.length,
     following,
+  };
+};
+
+// Bookmark Resource
+export const bookmarkResource = async (userId, resourceType, resourceId) => {
+  // Logged-in Student
+  const student = await StudentProfile.findOne({
+    user: userId,
+  });
+
+  if (!student) {
+    const error = new Error("Student profile not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  // Allowed resource types
+  const resourceModels = {
+    Project,
+    Note,
+    Internship,
+  };
+
+  const Model = resourceModels[resourceType];
+
+  if (!Model) {
+    const error = new Error("Invalid resource type");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  // Check resource exists
+  const resource = await Model.findById(resourceId);
+
+  if (!resource || resource.isActive === false) {
+    const error = new Error(`${resourceType} not found`);
+    error.statusCode = 404;
+    throw error;
+  }
+
+  // Check already bookmarked
+  const existingBookmark = await Bookmark.findOne({
+    student: student._id,
+    resourceType,
+    resourceId,
+  });
+
+  if (existingBookmark) {
+    const error = new Error(`${resourceType} is already bookmarked`);
+    error.statusCode = 400;
+    throw error;
+  }
+
+  // Create bookmark
+  const bookmark = await Bookmark.create({
+    student: student._id,
+    resourceType,
+    resourceId,
+  });
+
+  // Increase bookmark count
+  await Model.updateOne(
+    {
+      _id: resourceId,
+    },
+    {
+      $inc: {
+        bookmarksCount: 1,
+      },
+    },
+  );
+
+  return {
+    success: true,
+    message: `${resourceType} bookmarked successfully`,
+    bookmark,
+  };
+};
+
+// Remove Bookmark
+export const removeBookmark = async (userId, resourceType, resourceId) => {
+  // Logged-in Student
+  const student = await StudentProfile.findOne({
+    user: userId,
+  });
+
+  if (!student) {
+    const error = new Error("Student profile not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  // Allowed Resource Types
+  const resourceModels = {
+    Project,
+    Note,
+    Internship,
+  };
+
+  const Model = resourceModels[resourceType];
+
+  if (!Model) {
+    const error = new Error("Invalid resource type");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  // Find Existing Bookmark
+  const bookmark = await Bookmark.findOne({
+    student: student._id,
+    resourceType,
+    resourceId,
+  });
+
+  if (!bookmark) {
+    const error = new Error(`${resourceType} is not bookmarked`);
+    error.statusCode = 404;
+    throw error;
+  }
+
+  // Delete Bookmark
+  await bookmark.deleteOne();
+
+  // Safely decrease bookmark count
+  await Model.updateOne(
+    {
+      _id: resourceId,
+      bookmarksCount: { $gt: 0 },
+    },
+    {
+      $inc: {
+        bookmarksCount: -1,
+      },
+    },
+  );
+
+  return {
+    success: true,
+    message: `${resourceType} bookmark removed successfully`,
+  };
+};
+
+// Get Logged-in Student Bookmarks
+export const getMyBookmarks = async (userId, resourceType = null) => {
+  // Logged-in Student
+  const student = await StudentProfile.findOne({
+    user: userId,
+  });
+
+  if (!student) {
+    const error = new Error("Student profile not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  // Build Filter
+  const filter = {
+    student: student._id,
+  };
+
+  // Optional resource type filter
+  if (resourceType) {
+    const allowedTypes = ["Project", "Note", "Internship"];
+
+    if (!allowedTypes.includes(resourceType)) {
+      const error = new Error("Invalid resource type");
+      error.statusCode = 400;
+      throw error;
+    }
+
+    filter.resourceType = resourceType;
+  }
+
+  // Get Bookmarks
+  const bookmarks = await Bookmark.find(filter).populate("resourceId").sort({
+    createdAt: -1,
+  });
+
+  return {
+    success: true,
+    count: bookmarks.length,
+    bookmarks,
+  };
+};
+
+// Get Community Feed
+export const getCommunityFeed = async (userId, page = 1, limit = 10) => {
+  // Logged-in Student
+  const student = await StudentProfile.findOne({
+    user: userId,
+  });
+
+  if (!student) {
+    const error = new Error("Student profile not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  // Pagination
+  page = Math.max(Number(page) || 1, 1);
+  limit = Math.min(Math.max(Number(limit) || 10, 1), 50);
+
+  const skip = (page - 1) * limit;
+
+  // Get students that current student follows
+  const followings = await Follow.find({
+    follower: student._id,
+  }).select("following");
+
+  const followingIds = followings.map((follow) => follow.following);
+
+  // If student follows nobody
+  if (followingIds.length === 0) {
+    return {
+      success: true,
+      currentPage: page,
+      totalPages: 0,
+      totalProjects: 0,
+      hasNextPage: false,
+      hasPreviousPage: false,
+      projects: [],
+    };
+  }
+
+  const filter = {
+    uploadedBy: {
+      $in: followingIds,
+    },
+    isActive: true,
+  };
+
+  const [projects, totalProjects] = await Promise.all([
+    Project.find(filter)
+      .populate({
+        path: "uploadedBy",
+        select: "user college course profileImage",
+        populate: {
+          path: "user",
+          select: "fullName isVerified",
+        },
+      })
+      .select(
+        "title description category techStack githubUrl liveDemoUrl thumbnail viewsCount bookmarksCount createdAt uploadedBy",
+      )
+      .sort({
+        createdAt: -1,
+      })
+      .skip(skip)
+      .limit(limit),
+
+    Project.countDocuments(filter),
+  ]);
+
+  const totalPages = Math.ceil(totalProjects / limit);
+
+  return {
+    success: true,
+
+    currentPage: page,
+    totalPages,
+    totalProjects,
+
+    hasNextPage: page < totalPages,
+    hasPreviousPage: page > 1,
+
+    projects,
+  };
+};
+export const getFollowStatus = async (userId, targetStudentId) => {
+  const currentStudent = await StudentProfile.findOne({
+    user: userId,
+  });
+
+  if (!currentStudent) {
+    const error = new Error("Student profile not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const targetStudent = await StudentProfile.findOne({
+    user: targetStudentId,
+  });
+
+  if (!targetStudent) {
+    const error = new Error("Student not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const follow = await Follow.exists({
+    follower: currentStudent._id,
+    following: targetStudent._id,
+  });
+
+  return {
+    success: true,
+    isFollowing: Boolean(follow),
   };
 };
