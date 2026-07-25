@@ -1,7 +1,8 @@
 import RecruiterProfile from "../models/RecruiterProfile.js";
+import Internship from "../models/Internship.js";
+import Application from "../models/Application.js";
+
 import { uploadToCloudinary } from "./upload.service.js";
-
-
 export const getProfile = async (userId) => {
   const profile = await RecruiterProfile.findOne({
     user: userId,
@@ -131,5 +132,159 @@ export const getPublicProfile = async (recruiterId) => {
   return {
     success: true,
     profile,
+  };
+};
+
+export const getRecruiterDashboard = async (userId) => {
+  // Find recruiter profile
+  const recruiter = await RecruiterProfile.findOne({
+    user: userId,
+  }).populate(
+    "user",
+    "fullName email isVerified"
+  );
+
+  if (!recruiter) {
+    const error = new Error("Recruiter profile not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  // Fetch dashboard data in parallel
+  const [
+    totalInternships,
+    activeInternships,
+    closedInternships,
+    totalApplications,
+    pendingApplications,
+    shortlistedApplications,
+    acceptedApplications,
+    rejectedApplications,
+    withdrawnApplications,
+    recentInternships,
+    recentApplications,
+  ] = await Promise.all([
+    // Total Internships
+    Internship.countDocuments({
+      recruiter: recruiter._id,
+    }),
+
+    // Active/Open Internships
+    Internship.countDocuments({
+      recruiter: recruiter._id,
+      status: "Open",
+      isActive: true,
+    }),
+
+    // Closed Internships
+    Internship.countDocuments({
+      recruiter: recruiter._id,
+      status: "Closed",
+    }),
+
+    // Total Applications
+    Application.countDocuments({
+      recruiter: recruiter._id,
+    }),
+
+    // Pending Applications
+    Application.countDocuments({
+      recruiter: recruiter._id,
+      status: "Pending",
+    }),
+
+    // Shortlisted Applications
+    Application.countDocuments({
+      recruiter: recruiter._id,
+      status: "Shortlisted",
+    }),
+
+    // Accepted Applications
+    Application.countDocuments({
+      recruiter: recruiter._id,
+      status: "Accepted",
+    }),
+
+    // Rejected Applications
+    Application.countDocuments({
+      recruiter: recruiter._id,
+      status: "Rejected",
+    }),
+
+    // Withdrawn Applications
+    Application.countDocuments({
+      recruiter: recruiter._id,
+      status: "Withdrawn",
+    }),
+
+    // Recent 5 Internships
+    Internship.find({
+      recruiter: recruiter._id,
+    })
+      .select(
+        "title category workMode location stipend status applicantsCount viewsCount isActive createdAt"
+      )
+      .sort({
+        createdAt: -1,
+      })
+      .limit(5),
+
+    // Recent 5 Applications
+    Application.find({
+      recruiter: recruiter._id,
+    })
+      .select(
+        "student internship status appliedAt"
+      )
+      .populate({
+        path: "student",
+        select:
+          "college course profileImage skills",
+        populate: {
+          path: "user",
+          select: "fullName email",
+        },
+      })
+      .populate({
+        path: "internship",
+        select: "title",
+      })
+      .sort({
+        appliedAt: -1,
+      })
+      .limit(5),
+  ]);
+
+  return {
+    success: true,
+
+    dashboard: {
+      profile: {
+        recruiterId: recruiter.user._id,
+        fullName: recruiter.user.fullName,
+        email: recruiter.user.email,
+        isVerified: recruiter.user.isVerified,
+        companyName: recruiter.companyName,
+        companyLogo: recruiter.companyLogo,
+        industry: recruiter.industry,
+        location: recruiter.location,
+      },
+
+      stats: {
+        totalInternships,
+        activeInternships,
+        closedInternships,
+        totalApplications,
+        pending: pendingApplications,
+        shortlisted: shortlistedApplications,
+        accepted: acceptedApplications,
+        rejected: rejectedApplications,
+        withdrawn: withdrawnApplications,
+      },
+
+      recentInternships,
+
+      recentApplications,
+    },
   };
 };
