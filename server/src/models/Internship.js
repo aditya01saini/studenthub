@@ -136,6 +136,11 @@ const internshipSchema = new mongoose.Schema(
       default: 0,
     },
 
+    bookmarksCount: {
+      type: Number,
+      default: 0,
+    },
+
     isFeatured: {
       type: Boolean,
       default: false,
@@ -150,6 +155,24 @@ const internshipSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
+
+
+internshipSchema.index({
+  recruiter: 1,
+  isActive: 1,
+});
+
+internshipSchema.index({
+  category: 1,
+});
+
+internshipSchema.index({
+  status: 1,
+});
+
+internshipSchema.index({
+  applicationDeadline: 1,
+});
 
 const Internship = mongoose.model("Internship", internshipSchema);
 
