@@ -28,8 +28,16 @@ export const getProfile = async (userId) => {
 };
 
 export const updateProfile = async (userId, profileData) => {
-  const { college, course, bio, skills, github, linkedin, portfolio } =
-    profileData;
+  const {
+    college,
+    course,
+    graduationYear,
+    bio,
+    skills,
+    github,
+    linkedin,
+    portfolio,
+  } = profileData;
 
   const profile = await StudentProfile.findOne({
     user: userId,
@@ -43,6 +51,7 @@ export const updateProfile = async (userId, profileData) => {
 
   profile.college = college || profile.college;
   profile.course = course || profile.course;
+  profile.graduationYear = graduationYear || profile.graduationYear;
   profile.bio = bio || profile.bio;
   profile.github = github || profile.github;
   profile.linkedin = linkedin || profile.linkedin;
@@ -543,6 +552,26 @@ export const getStudentDashboard = async (userId) => {
     notes: totalNotes,
   });
 
+  // Calculate Profile Completion
+  const profileFields = [
+    student.profileImage,
+    student.college,
+    student.course,
+    student.graduationYear,
+    student.bio,
+    student.skills?.length > 0,
+    student.github,
+    student.linkedin,
+    student.portfolio,
+    student.resume,
+  ];
+
+  const completedFields = profileFields.filter(Boolean).length;
+
+  const profileCompletion = Math.round(
+    (completedFields / profileFields.length) * 100,
+  );
+
   return {
     success: true,
 
@@ -560,6 +589,7 @@ export const getStudentDashboard = async (userId) => {
 
       stats: {
         score,
+        profileCompletion,
         projects: totalProjects,
         notes: totalNotes,
         applications: totalApplications,
@@ -579,13 +609,8 @@ export const getStudentDashboard = async (userId) => {
   };
 };
 
-
 // Search Students
-export const searchStudents = async (
-  query,
-  page = 1,
-  limit = 10,
-) => {
+export const searchStudents = async (query, page = 1, limit = 10) => {
   page = Math.max(Number(page) || 1, 1);
   limit = Math.min(Math.max(Number(limit) || 10, 1), 50);
 
@@ -620,10 +645,7 @@ export const searchStudents = async (
 
   const [students, totalStudents] = await Promise.all([
     StudentProfile.find(filter)
-      .populate(
-        "user",
-        "fullName isVerified",
-      )
+      .populate("user", "fullName isVerified")
       .select(
         "user college course skills profileImage bio followersCount followingCount",
       )
@@ -636,9 +658,7 @@ export const searchStudents = async (
     StudentProfile.countDocuments(filter),
   ]);
 
-  const totalPages = Math.ceil(
-    totalStudents / limit,
-  );
+  const totalPages = Math.ceil(totalStudents / limit);
 
   return {
     success: true,
