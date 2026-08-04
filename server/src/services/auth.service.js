@@ -4,8 +4,8 @@ import RecruiterProfile from "../models/RecruiterProfile.js";
 import jwt from "jsonwebtoken";
 
 export const registerUser = async (userData) => {
-  const { fullName, email, password, role, companyName } = userData;
-
+  const { fullName, email, password, role, companyName, college, website } =
+    userData;
   // Check if email already exists
   const existingUser = await User.findOne({ email });
 
@@ -25,6 +25,7 @@ export const registerUser = async (userData) => {
   if (role === "student") {
     await StudentProfile.create({
       user: user._id,
+      college,
     });
   }
 
@@ -32,9 +33,9 @@ export const registerUser = async (userData) => {
     await RecruiterProfile.create({
       user: user._id,
       companyName,
+      website,
     });
   }
-
   const userResponse = user.toObject();
 
   delete userResponse.password;
