@@ -2,12 +2,7 @@ import Project from "../models/Project.js";
 import StudentProfile from "../models/StudentProfile.js";
 import { uploadToCloudinary } from "./upload.service.js";
 
-export const uploadProject = async (
-  userId,
-  projectData,
-  files
-) => {
-
+export const uploadProject = async (userId, projectData, files) => {
   // Student Profile
   const student = await StudentProfile.findOne({
     user: userId,
@@ -21,17 +16,13 @@ export const uploadProject = async (
 
   // Images Validation
   if (!files || files.length === 0) {
-    const error = new Error(
-      "Please upload at least one project image."
-    );
+    const error = new Error("Please upload at least one project image.");
     error.statusCode = 400;
     throw error;
   }
 
   if (files.length > 5) {
-    const error = new Error(
-      "Maximum 5 project images are allowed."
-    );
+    const error = new Error("Maximum 5 project images are allowed.");
     error.statusCode = 400;
     throw error;
   }
@@ -57,13 +48,10 @@ export const uploadProject = async (
   }
 
   // GitHub Repository Validation
-  const githubRegex =
-    /^https:\/\/(www\.)?github\.com\/[^/]+\/[^/]+\/?$/i;
+  const githubRegex = /^https:\/\/(www\.)?github\.com\/[^/]+\/[^/]+\/?$/i;
 
   if (!githubRegex.test(projectData.githubUrl)) {
-    const error = new Error(
-      "Please provide a valid GitHub repository URL."
-    );
+    const error = new Error("Please provide a valid GitHub repository URL.");
     error.statusCode = 400;
     throw error;
   }
@@ -77,17 +65,14 @@ export const uploadProject = async (
   const existingProject = await Project.findOne({
     uploadedBy: student._id,
     title: {
-      $regex: new RegExp(
-        `^${projectData.title.trim()}$`,
-        "i"
-      ),
+      $regex: new RegExp(`^${projectData.title.trim()}$`, "i"),
     },
     isActive: true,
   });
 
   if (existingProject) {
     const error = new Error(
-      "You have already uploaded a project with this title."
+      "You have already uploaded a project with this title.",
     );
     error.statusCode = 400;
     throw error;
@@ -100,7 +85,7 @@ export const uploadProject = async (
     const imageUrl = await uploadToCloudinary(
       file.path,
       "studenthub/project-images",
-      "image"
+      "image",
     );
 
     imageUrls.push(imageUrl);
@@ -120,12 +105,14 @@ export const uploadProject = async (
 
     githubUrl: projectData.githubUrl.trim(),
 
-    liveDemoUrl:
-      projectData.liveDemoUrl?.trim() || "",
+    liveDemoUrl: projectData.liveDemoUrl?.trim() || "",
 
     images: imageUrls,
 
     thumbnail: imageUrls[0],
+
+    projectStatus:
+      projectData.projectStatus === "In Progress" ? "In Progress" : "Completed",
   });
 
   return {
@@ -135,33 +122,29 @@ export const uploadProject = async (
   };
 };
 
-
 export const getMyProjects = async (userId) => {
-
   // Student Profile
   const student = await StudentProfile.findOne({
     user: userId,
   });
 
   if (!student) {
-    const error = new Error(
-      "Student profile not found."
-    );
+    const error = new Error("Student profile not found.");
     error.statusCode = 404;
     throw error;
   }
 
   // Get Projects
   const projects = await Project.find({
-  uploadedBy: student._id,
-  isActive: true,
-})
-.select(
-  "title category thumbnail githubUrl liveDemoUrl viewsCount likesCount createdAt"
-)
-.sort({
-  createdAt: -1,
-});
+    uploadedBy: student._id,
+    isActive: true,
+  })
+    .select(
+      "title category thumbnail githubUrl liveDemoUrl viewsCount likesCount createdAt",
+    )
+    .sort({
+      createdAt: -1,
+    });
 
   return {
     success: true,
@@ -170,11 +153,7 @@ export const getMyProjects = async (userId) => {
   };
 };
 
-export const getAllProjects = async (
-  page = 1,
-  limit = 12
-) => {
-
+export const getAllProjects = async (page = 1, limit = 12) => {
   page = Number(page);
   limit = Number(limit);
 
@@ -196,7 +175,7 @@ export const getAllProjects = async (
       },
     })
     .select(
-      "title category thumbnail githubUrl liveDemoUrl techStack viewsCount likesCount createdAt uploadedBy"
+      "title category thumbnail githubUrl liveDemoUrl techStack viewsCount likesCount createdAt uploadedBy",
     )
     .sort({
       createdAt: -1,
@@ -204,59 +183,46 @@ export const getAllProjects = async (
     .skip(skip)
     .limit(limit);
 
- return {
-  success: true,
+  return {
+    success: true,
 
-  currentPage: page,
+    currentPage: page,
 
-  totalPages: Math.ceil(
-    totalProjects / limit
-  ),
+    totalPages: Math.ceil(totalProjects / limit),
 
-  totalProjects,
+    totalProjects,
 
-  hasNextPage:
-    page < Math.ceil(totalProjects / limit),
+    hasNextPage: page < Math.ceil(totalProjects / limit),
 
-  hasPreviousPage:
-    page > 1,
+    hasPreviousPage: page > 1,
 
-  projects,
-}
-}
-export const getSingleProject = async (
-  projectId
-) => {
+    projects,
+  };
+};
 
+export const getSingleProject = async (projectId) => {
   // Increase View Count (Atomic Update)
-  await Project.findByIdAndUpdate(
-    projectId,
-    {
-      $inc: {
-        viewsCount: 1,
-      },
-    }
-  );
+  await Project.findByIdAndUpdate(projectId, {
+    $inc: {
+      viewsCount: 1,
+    },
+  });
 
   // Get Updated Project
   const project = await Project.findOne({
     _id: projectId,
     isActive: true,
-  })
-    .populate({
-      path: "uploadedBy",
-      select:
-        "college course profileImage bio skills github linkedin portfolio",
-      populate: {
-        path: "user",
-        select: "fullName email",
-      },
-    });
+  }).populate({
+    path: "uploadedBy",
+    select: "college course profileImage bio skills github linkedin portfolio",
+    populate: {
+      path: "user",
+      select: "fullName email",
+    },
+  });
 
   if (!project) {
-    const error = new Error(
-      "Project not found."
-    );
+    const error = new Error("Project not found.");
     error.statusCode = 404;
     throw error;
   }
@@ -267,12 +233,7 @@ export const getSingleProject = async (
   };
 };
 
-export const updateProject = async (
-  userId,
-  projectId,
-  projectData
-) => {
-
+export const updateProject = async (userId, projectId, projectData) => {
   // Student Profile
   const student = await StudentProfile.findOne({
     user: userId,
@@ -297,43 +258,31 @@ export const updateProject = async (
   }
 
   // Ownership Check
-  if (
-    project.uploadedBy.toString() !==
-    student._id.toString()
-  ) {
-    const error = new Error(
-      "You are not authorized to update this project."
-    );
+  if (project.uploadedBy.toString() !== student._id.toString()) {
+    const error = new Error("You are not authorized to update this project.");
     error.statusCode = 403;
     throw error;
   }
 
   // Duplicate Project Title Check
-if (projectData.title) {
+  if (projectData.title) {
+    const existingProject = await Project.findOne({
+      uploadedBy: student._id,
+      _id: { $ne: projectId },
+      title: {
+        $regex: new RegExp(`^${projectData.title.trim()}$`, "i"),
+      },
+      isActive: true,
+    });
 
-  const existingProject = await Project.findOne({
-    uploadedBy: student._id,
-    _id: { $ne: projectId },
-    title: {
-      $regex: new RegExp(
-        `^${projectData.title.trim()}$`,
-        "i"
-      ),
-    },
-    isActive: true,
-  });
-
-  if (existingProject) {
-    const error = new Error(
-      "You already have another project with this title."
-    );
-    error.statusCode = 400;
-    throw error;
+    if (existingProject) {
+      const error = new Error(
+        "You already have another project with this title.",
+      );
+      error.statusCode = 400;
+      throw error;
+    }
   }
-
-}
-
-
 
   // Category Validation
   const validCategories = [
@@ -349,104 +298,75 @@ if (projectData.title) {
     "Other",
   ];
 
-  if (
-    projectData.category &&
-    !validCategories.includes(projectData.category)
-  ) {
-    const error = new Error(
-      "Invalid project category."
-    );
+  if (projectData.category && !validCategories.includes(projectData.category)) {
+    const error = new Error("Invalid project category.");
     error.statusCode = 400;
     throw error;
   }
 
   // GitHub URL Validation
   if (projectData.githubUrl) {
-
-    const githubRegex =
-      /^https:\/\/(www\.)?github\.com\/[^/]+\/[^/]+\/?$/i;
+    const githubRegex = /^https:\/\/(www\.)?github\.com\/[^/]+\/[^/]+\/?$/i;
 
     if (!githubRegex.test(projectData.githubUrl)) {
-      const error = new Error(
-        "Please provide a valid GitHub repository URL."
-      );
+      const error = new Error("Please provide a valid GitHub repository URL.");
       error.statusCode = 400;
       throw error;
     }
   }
 
   // Live Demo URL Validation
-if (projectData.liveDemoUrl) {
-
-  try {
-    new URL(projectData.liveDemoUrl);
-  } catch {
-    const error = new Error(
-      "Please provide a valid Live Demo URL."
-    );
-    error.statusCode = 400;
-    throw error;
+  if (projectData.liveDemoUrl) {
+    try {
+      new URL(projectData.liveDemoUrl);
+    } catch {
+      const error = new Error("Please provide a valid Live Demo URL.");
+      error.statusCode = 400;
+      throw error;
+    }
   }
-
-}
 
   // Tech Stack
   if (projectData.techStack) {
-
     project.techStack = [
-      ...new Set(
-        projectData.techStack.map((tech) =>
-          tech.trim()
-        )
-      ),
+      ...new Set(projectData.techStack.map((tech) => tech.trim())),
     ];
   }
 
-  project.title =
-    projectData.title?.trim() ||
-    project.title;
+  project.title = projectData.title?.trim() || project.title;
 
-  project.description =
-    projectData.description?.trim() ||
-    project.description;
+  project.description = projectData.description?.trim() || project.description;
 
-  project.category =
-    projectData.category ||
-    project.category;
+  project.category = projectData.category || project.category;
 
-  project.githubUrl =
-    projectData.githubUrl?.trim() ||
-    project.githubUrl;
+  project.githubUrl = projectData.githubUrl?.trim() || project.githubUrl;
 
-  project.liveDemoUrl =
-    projectData.liveDemoUrl?.trim() ||
-    project.liveDemoUrl;
+  project.liveDemoUrl = projectData.liveDemoUrl?.trim() || project.liveDemoUrl;
 
+  // Project Status
+  if (
+    projectData.projectStatus &&
+    ["Completed", "In Progress"].includes(projectData.projectStatus)
+  ) {
+    project.projectStatus = projectData.projectStatus;
+  }
   await project.save();
 
   return {
     success: true,
-    message:
-      "Project updated successfully.",
+    message: "Project updated successfully.",
     project,
   };
 };
 
-export const updateProjectImages = async (
-  userId,
-  projectId,
-  files
-) => {
-
+export const updateProjectImages = async (userId, projectId, files) => {
   // Student Profile
   const student = await StudentProfile.findOne({
     user: userId,
   });
 
   if (!student) {
-    const error = new Error(
-      "Student profile not found."
-    );
+    const error = new Error("Student profile not found.");
     error.statusCode = 404;
     throw error;
   }
@@ -464,30 +384,21 @@ export const updateProjectImages = async (
   }
 
   // Ownership Check
-  if (
-    project.uploadedBy.toString() !==
-    student._id.toString()
-  ) {
-    const error = new Error(
-      "You are not authorized to update this project."
-    );
+  if (project.uploadedBy.toString() !== student._id.toString()) {
+    const error = new Error("You are not authorized to update this project.");
     error.statusCode = 403;
     throw error;
   }
 
   // Images Validation
   if (!files || files.length === 0) {
-    const error = new Error(
-      "Please upload at least one project image."
-    );
+    const error = new Error("Please upload at least one project image.");
     error.statusCode = 400;
     throw error;
   }
 
   if (files.length > 5) {
-    const error = new Error(
-      "Maximum 5 project images are allowed."
-    );
+    const error = new Error("Maximum 5 project images are allowed.");
     error.statusCode = 400;
     throw error;
   }
@@ -496,15 +407,13 @@ export const updateProjectImages = async (
   const imageUrls = [];
 
   for (const file of files) {
-
     const imageUrl = await uploadToCloudinary(
       file.path,
       "studenthub/project-images",
-      "image"
+      "image",
     );
 
     imageUrls.push(imageUrl);
-
   }
 
   // Replace Images
@@ -516,26 +425,19 @@ export const updateProjectImages = async (
 
   return {
     success: true,
-    message:
-      "Project images updated successfully.",
+    message: "Project images updated successfully.",
     project,
   };
 };
 
-export const deleteProject = async (
-  userId,
-  projectId
-) => {
-
+export const deleteProject = async (userId, projectId) => {
   // Student Profile
   const student = await StudentProfile.findOne({
     user: userId,
   });
 
   if (!student) {
-    const error = new Error(
-      "Student profile not found."
-    );
+    const error = new Error("Student profile not found.");
     error.statusCode = 404;
     throw error;
   }
@@ -547,21 +449,14 @@ export const deleteProject = async (
   });
 
   if (!project) {
-    const error = new Error(
-      "Project not found."
-    );
+    const error = new Error("Project not found.");
     error.statusCode = 404;
     throw error;
   }
 
   // Ownership Check
-  if (
-    project.uploadedBy.toString() !==
-    student._id.toString()
-  ) {
-    const error = new Error(
-      "You are not authorized to delete this project."
-    );
+  if (project.uploadedBy.toString() !== student._id.toString()) {
+    const error = new Error("You are not authorized to delete this project.");
     error.statusCode = 403;
     throw error;
   }
@@ -577,17 +472,14 @@ export const deleteProject = async (
   };
 };
 
-export const searchProjects = async (
-  {
-    search = "",
-    category = "",
-    techStack = "",
-    sort = "latest",
-    page = 1,
-    limit = 12,
-  }
-) => {
-
+export const searchProjects = async ({
+  search = "",
+  category = "",
+  techStack = "",
+  sort = "latest",
+  page = 1,
+  limit = 12,
+}) => {
   page = Number(page);
   limit = Number(limit);
 
@@ -599,9 +491,7 @@ export const searchProjects = async (
 
   // Search
   if (search.trim()) {
-
     filter.$or = [
-
       {
         title: {
           $regex: search.trim(),
@@ -615,37 +505,25 @@ export const searchProjects = async (
           $options: "i",
         },
       },
-
     ];
-
   }
 
   // Category Filter
   if (category.trim()) {
-
     filter.category = category.trim();
-
   }
 
   // Tech Stack Filter
   if (techStack.trim()) {
-
     filter.techStack = {
-      $in: [
-        new RegExp(
-          `^${techStack.trim()}$`,
-          "i"
-        ),
-      ],
+      $in: [new RegExp(`^${techStack.trim()}$`, "i")],
     };
-
   }
 
   // Sorting
   let sortOption = {};
 
   switch (sort) {
-
     case "oldest":
       sortOption = {
         createdAt: 1,
@@ -662,52 +540,39 @@ export const searchProjects = async (
       sortOption = {
         createdAt: -1,
       };
-
   }
 
-  const totalProjects =
-    await Project.countDocuments(filter);
+  const totalProjects = await Project.countDocuments(filter);
 
   const projects = await Project.find(filter)
     .populate({
       path: "uploadedBy",
-      select:
-        "college course profileImage",
+      select: "college course profileImage",
       populate: {
         path: "user",
         select: "fullName",
       },
     })
     .select(
-      "title category thumbnail githubUrl liveDemoUrl techStack viewsCount likesCount createdAt uploadedBy"
+      "title category thumbnail githubUrl liveDemoUrl techStack viewsCount likesCount createdAt uploadedBy",
     )
     .sort(sortOption)
     .skip(skip)
     .limit(limit);
 
   return {
-
     success: true,
 
     currentPage: page,
 
-    totalPages: Math.ceil(
-      totalProjects / limit
-    ),
+    totalPages: Math.ceil(totalProjects / limit),
 
     totalProjects,
 
-    hasNextPage:
-      page <
-      Math.ceil(
-        totalProjects / limit
-      ),
+    hasNextPage: page < Math.ceil(totalProjects / limit),
 
-    hasPreviousPage:
-      page > 1,
+    hasPreviousPage: page > 1,
 
     projects,
-
   };
-
 };
