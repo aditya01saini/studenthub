@@ -1,22 +1,31 @@
+import CountUp from "react-countup";
+import Card from "../../ui/Card";
+import Container from "../../ui/Container";
+import SectionTitle from "../../ui/SectionTitle";
+
 const statistics = [
   {
     id: 1,
-    number: "15K+",
+    number: 15000,
+    suffix: "+",
     title: "Students",
   },
   {
     id: 2,
-    number: "5K+",
+    number: 5000,
+    suffix: "+",
     title: "Notes",
   },
   {
     id: 3,
-    number: "1200+",
+    number: 1200,
+    suffix: "+",
     title: "Projects",
   },
   {
     id: 4,
-    number: "250+",
+    number: 250,
+    suffix: "+",
     title: "Internships",
   },
 ];
@@ -24,32 +33,34 @@ const statistics = [
 const Statistics = () => {
   return (
     <section className="bg-white py-20">
-      <div className="mx-auto max-w-7xl px-6">
-
-        <h2 className="mb-12 text-center text-3xl font-bold text-gray-900">
-          Trusted by Students Across India
-        </h2>
+      <Container>
+        <SectionTitle
+          title="Trusted by Students Across India"
+          subtitle="Thousands of students use StudentHub to share notes, showcase projects, and discover internships."
+        />
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-
           {statistics.map((item) => (
-            <div
-              key={item.id}
-              className="rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm transition hover:shadow-lg"
-            >
+            <Card key={item.id} className="text-center">
+              {/* <h3 className="text-4xl font-bold text-indigo-600">
+                <CountUp
+                  end={item.number}
+                  duration={2}
+                  separator=","
+                />
+                {item.suffix}
+              </h3> */}
               <h3 className="text-4xl font-bold text-indigo-600">
                 {item.number}
+                {item.suffix}
               </h3>
-
-              <p className="mt-3 text-lg font-medium text-gray-600">
+              <p className="mt-3 text-lg font-medium text-slate-600">
                 {item.title}
               </p>
-            </div>
+            </Card>
           ))}
-
         </div>
-
-      </div>
+      </Container>
     </section>
   );
 };
