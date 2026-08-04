@@ -5,47 +5,52 @@ import {
   FaUsers,
   FaUserGraduate,
   FaBell,
+  FaArrowRight,
 } from "react-icons/fa";
+
+import Card from "../../ui/Card";
+import Container from "../../ui/Container";
+import SectionTitle from "../../ui/SectionTitle";
 
 const features = [
   {
     id: 1,
-    icon: <FaBookOpen className="text-4xl text-indigo-600" />,
+    icon: FaBookOpen,
     title: "Notes Sharing",
     description:
       "Upload, download and share study notes with students across India.",
   },
   {
     id: 2,
-    icon: <FaFolderOpen className="text-4xl text-indigo-600" />,
+    icon: FaFolderOpen,
     title: "Project Showcase",
     description:
       "Build your portfolio by showcasing your academic and personal projects.",
   },
   {
     id: 3,
-    icon: <FaBriefcase className="text-4xl text-indigo-600" />,
+    icon: FaBriefcase,
     title: "Internship Portal",
     description:
       "Find internships and apply directly through StudentHub.",
   },
   {
     id: 4,
-    icon: <FaUsers className="text-4xl text-indigo-600" />,
+    icon: FaUsers,
     title: "Student Community",
     description:
       "Connect with students, share knowledge and grow together.",
   },
   {
     id: 5,
-    icon: <FaUserGraduate className="text-4xl text-indigo-600" />,
+    icon: FaUserGraduate,
     title: "Professional Portfolio",
     description:
       "Create a professional profile that recruiters can explore.",
   },
   {
     id: 6,
-    icon: <FaBell className="text-4xl text-indigo-600" />,
+    icon: FaBell,
     title: "Real-time Notifications",
     description:
       "Stay updated with internships, notes and community activities.",
@@ -55,37 +60,61 @@ const features = [
 const Features = () => {
   return (
     <section className="bg-slate-50 py-20">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="mb-16 text-center">
-          <h2 className="text-4xl font-bold text-gray-900">
-            Everything You Need In One Platform
-          </h2>
+      <Container>
 
-          <p className="mt-4 text-lg text-gray-600">
-            StudentHub provides all the tools students need to learn,
-            collaborate and grow professionally.
-          </p>
-        </div>
+        <SectionTitle
+          title="Everything You Need In One Platform"
+          subtitle="StudentHub provides all the tools students need to learn, collaborate and grow professionally."
+        />
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {features.map((feature) => (
-            <div
-              key={feature.id}
-              className="rounded-3xl bg-white p-8 shadow-md transition-all duration-300 hover:-translate-y-3 hover:shadow-xl"
-            >
-              <div className="mb-6">{feature.icon}</div>
 
-              <h3 className="mb-3 text-2xl font-semibold text-gray-900">
-                {feature.title}
-              </h3>
+          {features.map((feature) => {
+            const Icon = feature.icon;
 
-              <p className="leading-7 text-gray-600">
-                {feature.description}
-              </p>
-            </div>
-          ))}
+            return (
+              <Card
+                key={feature.id}
+                className="group cursor-pointer border border-transparent text-left hover:border-indigo-200"
+              >
+
+                {/* Icon */}
+
+                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-100 transition-all duration-300 group-hover:scale-110 group-hover:bg-indigo-600">
+
+                  <Icon className="text-3xl text-indigo-600 transition-all duration-300 group-hover:text-white" />
+
+                </div>
+
+                {/* Title */}
+
+                <h3 className="mb-4 text-2xl font-bold text-slate-900">
+                  {feature.title}
+                </h3>
+
+                {/* Description */}
+
+                <p className="leading-7 text-slate-600">
+                  {feature.description}
+                </p>
+
+                {/* Learn More */}
+
+                <div className="mt-8 flex items-center gap-2 font-semibold text-indigo-600">
+
+                  Learn More
+
+                  <FaArrowRight className="transition-transform duration-300 group-hover:translate-x-2" />
+
+                </div>
+
+              </Card>
+            );
+          })}
+
         </div>
-      </div>
+
+      </Container>
     </section>
   );
 };
