@@ -4,7 +4,8 @@ import {
   getStudentApplications,
   withdrawStudentApplication,
   getRecruiterApplicants,
-  updateApplication
+  updateApplication,
+  getRecruiterApplicationsData
 
 } from "../controllers/application.controller.js";
 import { protect } from "../middlewares/auth.middleware.js";
@@ -32,6 +33,13 @@ router.patch(
   protect,
   authorize("student"),
   withdrawStudentApplication,
+);
+
+router.get(
+  "/recruiter",
+  protect,
+  authorize("recruiter"),
+  getRecruiterApplicationsData
 );
 
 router.get(

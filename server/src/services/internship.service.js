@@ -24,7 +24,7 @@ export const createInternship = async (userId, internshipData) => {
   };
 };
 
-export const getRecruiterInternships = async (userId) => {
+export const getRecruiterInternships = async (userId, query) => {
   const recruiter = await RecruiterProfile.findOne({
     user: userId,
   });
@@ -35,15 +35,77 @@ export const getRecruiterInternships = async (userId) => {
     throw error;
   }
 
-  const internships = await Internship.find({
+  const { page = 1, limit = 10, search = "", status, sort = "latest" } = query;
+
+  const filter = {
     recruiter: recruiter._id,
-  }).sort({
-    createdAt: -1,
-  });
+  };
+
+  // Search
+  if (search) {
+    filter.$or = [
+      {
+        title: {
+          $regex: search,
+          $options: "i",
+        },
+      },
+      {
+        category: {
+          $regex: search,
+          $options: "i",
+        },
+      },
+      {
+        location: {
+          $regex: search,
+          $options: "i",
+        },
+      },
+    ];
+  }
+
+  // Status Filter
+  // Status Filter
+  if (status && status !== "All") {
+    filter.status = status;
+  }
+
+  // Sorting
+  let sortOption = {};
+
+  switch (sort) {
+    case "oldest":
+      sortOption = {
+        createdAt: 1,
+      };
+      break;
+
+    case "stipend":
+      sortOption = {
+        stipend: -1,
+      };
+      break;
+
+    default:
+      sortOption = {
+        createdAt: -1,
+      };
+  }
+
+  const totalResults = await Internship.countDocuments(filter);
+
+  const internships = await Internship.find(filter)
+    .sort(sortOption)
+    .skip((Number(page) - 1) * Number(limit))
+    .limit(Number(limit));
 
   return {
     success: true,
-    count: internships.length,
+    page: Number(page),
+    limit: Number(limit),
+    totalResults,
+    totalPages: Math.ceil(totalResults / limit),
     internships,
   };
 };
@@ -51,7 +113,7 @@ export const getRecruiterInternships = async (userId) => {
 export const updateInternship = async (
   userId,
   internshipId,
-  internshipData
+  internshipData,
 ) => {
   // Recruiter Profile
   const recruiter = await RecruiterProfile.findOne({
@@ -74,12 +136,8 @@ export const updateInternship = async (
   }
 
   // Security Check
-  if (
-    internship.recruiter.toString() !== recruiter._id.toString()
-  ) {
-    const error = new Error(
-      "You are not authorized to update this internship"
-    );
+  if (internship.recruiter.toString() !== recruiter._id.toString()) {
+    const error = new Error("You are not authorized to update this internship");
     error.statusCode = 403;
     throw error;
   }
@@ -95,10 +153,7 @@ export const updateInternship = async (
   };
 };
 
-export const deleteInternship = async (
-  userId,
-  internshipId
-) => {
+export const deleteInternship = async (userId, internshipId) => {
   // Recruiter Profile
   const recruiter = await RecruiterProfile.findOne({
     user: userId,
@@ -111,9 +166,7 @@ export const deleteInternship = async (
   }
 
   // Internship
-  const internship = await Internship.findById(
-    internshipId
-  );
+  const internship = await Internship.findById(internshipId);
 
   if (!internship) {
     const error = new Error("Internship not found");
@@ -122,13 +175,8 @@ export const deleteInternship = async (
   }
 
   // Ownership Check
-  if (
-    internship.recruiter.toString() !==
-    recruiter._id.toString()
-  ) {
-    const error = new Error(
-      "You are not authorized to delete this internship"
-    );
+  if (internship.recruiter.toString() !== recruiter._id.toString()) {
+    const error = new Error("You are not authorized to delete this internship");
     error.statusCode = 403;
     throw error;
   }
@@ -142,14 +190,13 @@ export const deleteInternship = async (
 };
 
 export const getSingleInternship = async (internshipId) => {
-  const internship = await Internship.findById(internshipId)
-    .populate({
-      path: "recruiter",
-      populate: {
-        path: "user",
-        select: "fullName isVerified",
-      },
-    });
+  const internship = await Internship.findById(internshipId).populate({
+    path: "recruiter",
+    populate: {
+      path: "user",
+      select: "fullName isVerified",
+    },
+  });
 
   if (!internship) {
     const error = new Error("Internship not found");

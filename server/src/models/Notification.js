@@ -27,8 +27,15 @@ const notificationSchema = new mongoose.Schema(
         "NEW_FOLLOWER",
         "PROJECT_LIKED",
         "SYSTEM",
+        "ADMIN_ANNOUNCEMENT",
       ],
       required: true,
+    },
+
+    target: {
+      type: String,
+      enum: ["all", "students", "recruiters", "user"],
+      default: null,
     },
 
     title: {
@@ -89,9 +96,6 @@ notificationSchema.index({
   isRead: 1,
 });
 
-const Notification = mongoose.model(
-  "Notification",
-  notificationSchema,
-);
+const Notification = mongoose.model("Notification", notificationSchema);
 
 export default Notification;

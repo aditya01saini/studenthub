@@ -1,29 +1,26 @@
 import { useEffect, useState } from "react";
 
 import {
-  FaBriefcase,
-  FaUsers,
-  FaCheckCircle,
-  FaTimesCircle,
-  FaClock,
-} from "react-icons/fa";
+  BriefcaseBusiness,
+  Briefcase,
+  FileText,
+  Clock3,
+  CheckCircle2,
+  XCircle,
+  Users,
+  PlusCircle,
+} from "lucide-react";
 
 import { getRecruiterDashboard } from "../../services/recruiter.service";
 
+import StatCard from "../../components/recruiter/StatCard";
+import QuickActionCard from "../../components/recruiter/QuickActionCard";
+import RecentInternshipTable from "../../components/recruiter/RecentInternshipTable";
+import RecentApplicationTable from "../../components/recruiter/RecentApplicationTable";
+
 const RecruiterDashboard = () => {
-  // ===========================
-  // States
-  // ===========================
-
   const [dashboard, setDashboard] = useState(null);
-
   const [loading, setLoading] = useState(true);
-
-  const [error, setError] = useState("");
-
-  // ===========================
-  // Fetch Dashboard
-  // ===========================
 
   useEffect(() => {
     fetchDashboard();
@@ -31,17 +28,11 @@ const RecruiterDashboard = () => {
 
   const fetchDashboard = async () => {
     try {
-      setLoading(true);
+      const response = await getRecruiterDashboard();
 
-      setError("");
-
-      const data = await getRecruiterDashboard();
-
-      if (data.success) {
-        setDashboard(data.dashboard);
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || "Failed to load dashboard.");
+      setDashboard(response.dashboard);
+    } catch (error) {
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -49,240 +40,183 @@ const RecruiterDashboard = () => {
 
   if (loading) {
     return (
-      <div className="space-y-4">
-        {[...Array(6)].map((_, index) => (
-          <div
-            key={index}
-            className="h-32 animate-pulse rounded-2xl bg-slate-200"
-          />
-        ))}
+      <div className="flex h-96 items-center justify-center">
+        <p className="text-lg text-slate-500">Loading Dashboard...</p>
       </div>
     );
   }
 
-  if (error) {
-    return (
-      <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-600">
-        {error}
-      </div>
-    );
-  }
+  const { profile, stats, recentInternships, recentApplications } = dashboard;
 
-  const profile = dashboard?.profile || {};
-
-  const stats = dashboard?.stats || {};
-
-  const recentInternships = dashboard?.recentInternships || [];
-
-  const recentApplications = dashboard?.recentApplications || [];
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6">
-      {/* Hero */}
+    <div className="space-y-8">
+      {/* ================= Hero ================= */}
 
-      <section className="mb-8">
-        <p className="text-xs font-bold uppercase tracking-[0.18em] text-indigo-600">
-          Recruiter Dashboard
-        </p>
+      <section className="overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-blue-700 p-8 text-white shadow-xl">
+        <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-center">
+          {/* Left */}
+          <div className="flex-1">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-indigo-200">
+              Recruiter Dashboard
+            </p>
 
-        <h1 className="mt-2 text-4xl font-bold tracking-tight text-slate-900">
-          Welcome, {profile.companyName}
-        </h1>
+            <h1 className="mt-3 text-4xl font-bold">
+              Welcome, {profile.companyName}
+            </h1>
 
-        <p className="mt-3 max-w-2xl text-slate-500">
-          Manage your internships, review applications and track your hiring
-          progress from one place.
-        </p>
-      </section>
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              {profile.isVerified && (
+                <span className="rounded-full bg-green-500 px-4 py-1 text-sm font-semibold text-white">
+                  ✓ Verified Recruiter
+                </span>
+              )}
 
-      {/* Statistics */}
+              {profile.industry && (
+                <span className="rounded-full bg-white/20 px-4 py-1 text-sm">
+                  {profile.industry}
+                </span>
+              )}
 
-      <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-xl bg-white p-5 shadow">
-            <h3 className="text-sm text-slate-500">Total Internships</h3>
-            <p className="mt-2 text-3xl font-bold">{stats.totalInternships}</p>
+              {profile.location && (
+                <span className="rounded-full bg-white/20 px-4 py-1 text-sm">
+                  {profile.location}
+                </span>
+              )}
+            </div>
+
+            <p className="mt-6 max-w-2xl text-indigo-100">
+              Track internships, manage applications and hire talented students
+              from one powerful dashboard.
+            </p>
           </div>
 
-          <div className="rounded-xl bg-white p-5 shadow">
-            <h3 className="text-sm text-slate-500">Active Internships</h3>
-            <p className="mt-2 text-3xl font-bold">{stats.activeInternships}</p>
-          </div>
-
-          <div className="rounded-xl bg-white p-5 shadow">
-            <h3 className="text-sm text-slate-500">Closed Internships</h3>
-            <p className="mt-2 text-3xl font-bold">{stats.closedInternships}</p>
-          </div>
-
-          <div className="rounded-xl bg-white p-5 shadow">
-            <h3 className="text-sm text-slate-500">Total Applications</h3>
-            <p className="mt-2 text-3xl font-bold">{stats.totalApplications}</p>
-          </div>
-
-          <div className="rounded-xl bg-white p-5 shadow">
-            <h3 className="text-sm text-slate-500">Pending</h3>
-            <p className="mt-2 text-3xl font-bold">{stats.pending}</p>
-          </div>
-
-          <div className="rounded-xl bg-white p-5 shadow">
-            <h3 className="text-sm text-slate-500">Shortlisted</h3>
-            <p className="mt-2 text-3xl font-bold">{stats.shortlisted}</p>
-          </div>
-
-          <div className="rounded-xl bg-white p-5 shadow">
-            <h3 className="text-sm text-slate-500">Accepted</h3>
-            <p className="mt-2 text-3xl font-bold">{stats.accepted}</p>
-          </div>
-
-          <div className="rounded-xl bg-white p-5 shadow">
-            <h3 className="text-sm text-slate-500">Rejected</h3>
-            <p className="mt-2 text-3xl font-bold">{stats.rejected}</p>
+          {/* Right */}
+          <div className="flex justify-center">
+            <div className="rounded-3xl bg-white p-2 shadow-lg">
+              <img
+                src={
+                  profile.companyLogo ||
+                  "https://ui-avatars.com/api/?name=Company"
+                }
+                alt={profile.companyName}
+                className="h-36 w-36 rounded-2xl object-cover"
+              />
+            </div>
           </div>
         </div>
       </section>
-      {/* Recent Internships */}
+      {/* ================= Quick Actions ================= */}
 
-      <section className="mt-10">
-        <div className="mb-5 flex items-center justify-between">
+      <section>
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-slate-900">Quick Actions</h2>
+
+          <p className="mt-1 text-slate-500">
+            Frequently used recruiter actions.
+          </p>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <QuickActionCard
+            title="Post New Internship"
+            description="Create and publish a new internship opportunity for students."
+            icon={PlusCircle}
+            to="/recruiter/internships/create"
+            color="indigo"
+          />
+
+          <QuickActionCard
+            title="Manage Applications"
+            description="Review applicants, shortlist candidates and update application status."
+            icon={Users}
+            to="/recruiter/applications"
+            color="green"
+          />
+        </div>
+      </section>
+
+      {/* ================= Statistics ================= */}
+
+      <section>
+        <div className="mb-6">
           <h2 className="text-2xl font-bold text-slate-900">
-            Recent Internships
+            Dashboard Statistics
           </h2>
 
-          <span className="text-sm text-slate-500">
-            {recentInternships.length} Internship(s)
-          </span>
+          <p className="mt-1 text-slate-500">
+            Overview of your internships and hiring progress.
+          </p>
         </div>
 
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead className="bg-slate-100">
-                <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold">
-                    Title
-                  </th>
+        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+          <StatCard
+            title="Total Internships"
+            value={stats.totalInternships}
+            icon={BriefcaseBusiness}
+            color="indigo"
+          />
 
-                  <th className="px-6 py-4 text-left text-sm font-semibold">
-                    Category
-                  </th>
+          <StatCard
+            title="Active Internships"
+            value={stats.activeInternships}
+            icon={Briefcase}
+            color="green"
+          />
 
-                  <th className="px-6 py-4 text-left text-sm font-semibold">
-                    Work Mode
-                  </th>
+          <StatCard
+            title="Closed Internships"
+            value={stats.closedInternships}
+            icon={XCircle}
+            color="red"
+          />
 
-                  <th className="px-6 py-4 text-left text-sm font-semibold">
-                    Applicants
-                  </th>
+          <StatCard
+            title="Applications"
+            value={stats.totalApplications}
+            icon={FileText}
+            color="blue"
+          />
 
-                  <th className="px-6 py-4 text-left text-sm font-semibold">
-                    Status
-                  </th>
-                </tr>
-              </thead>
+          <StatCard
+            title="Pending"
+            value={stats.pending}
+            icon={Clock3}
+            color="yellow"
+          />
 
-              <tbody>
-                {recentInternships.length > 0 ? (
-                  recentInternships.map((internship) => (
-                    <tr
-                      key={internship._id}
-                      className="border-t border-slate-200"
-                    >
-                      <td className="px-6 py-4">{internship.title}</td>
+          <StatCard
+            title="Shortlisted"
+            value={stats.shortlisted}
+            icon={Users}
+            color="blue"
+          />
 
-                      <td className="px-6 py-4">{internship.category}</td>
+          <StatCard
+            title="Accepted"
+            value={stats.accepted}
+            icon={CheckCircle2}
+            color="green"
+          />
 
-                      <td className="px-6 py-4">{internship.workMode}</td>
-
-                      <td className="px-6 py-4">
-                        {internship.applicantsCount}
-                      </td>
-
-                      <td className="px-6 py-4">
-                        <span
-                          className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                            internship.status === "Open"
-                              ? "bg-green-100 text-green-700"
-                              : "bg-red-100 text-red-700"
-                          }`}
-                        >
-                          {internship.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="5" className="py-8 text-center text-slate-500">
-                      No internships found.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+          <StatCard
+            title="Rejected"
+            value={stats.rejected}
+            icon={XCircle}
+            color="red"
+          />
         </div>
       </section>
 
-      {/* Recent Applications */}
+      {/* ================= Recent Internships ================= */}
 
-      <section className="mt-10">
-        <div className="mb-5 flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-slate-900">
-            Recent Applications
-          </h2>
+      <section>
+        <RecentInternshipTable internships={recentInternships} />
+      </section>
 
-          <span className="text-sm text-slate-500">
-            {recentApplications.length} Application(s)
-          </span>
-        </div>
+      {/* ================= Recent Applications ================= */}
 
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead className="bg-slate-100">
-                <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold">
-                    Student
-                  </th>
-
-                  <th className="px-6 py-4 text-left text-sm font-semibold">
-                    Internship
-                  </th>
-
-                  <th className="px-6 py-4 text-left text-sm font-semibold">
-                    Status
-                  </th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {recentApplications.length > 0 ? (
-                  recentApplications.map((application) => (
-                    <tr
-                      key={application._id}
-                      className="border-t border-slate-200"
-                    >
-                      <td className="px-6 py-4">
-                        {application.student?.user?.fullName}
-                      </td>
-
-                      <td className="px-6 py-4">
-                        {application.internship?.title}
-                      </td>
-
-                      <td className="px-6 py-4">{application.status}</td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="3" className="py-8 text-center text-slate-500">
-                      No applications found.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <section>
+        <RecentApplicationTable applications={recentApplications} />
       </section>
     </div>
   );

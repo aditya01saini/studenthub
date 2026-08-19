@@ -5,6 +5,7 @@ export const createNotification = async ({
   recipient,
   sender = null,
   type,
+  target = null,
   title,
   message,
   application = null,
@@ -15,6 +16,7 @@ export const createNotification = async ({
     recipient,
     sender,
     type,
+    target,
     title,
     message,
     application,
@@ -26,37 +28,32 @@ export const createNotification = async ({
 };
 
 // Get Logged-in User Notifications
-export const getNotifications = async (
-  userId,
-  page = 1,
-  limit = 20,
-) => {
+export const getNotifications = async (userId, page = 1, limit = 20) => {
   page = Math.max(Number(page) || 1, 1);
   limit = Math.min(Math.max(Number(limit) || 20, 1), 100);
 
   const skip = (page - 1) * limit;
 
-  const [notifications, totalNotifications, unreadCount] =
-    await Promise.all([
-      Notification.find({
-        recipient: userId,
+  const [notifications, totalNotifications, unreadCount] = await Promise.all([
+    Notification.find({
+      recipient: userId,
+    })
+      .populate("sender", "fullName role")
+      .sort({
+        createdAt: -1,
       })
-        .populate("sender", "fullName role")
-        .sort({
-          createdAt: -1,
-        })
-        .skip(skip)
-        .limit(limit),
+      .skip(skip)
+      .limit(limit),
 
-      Notification.countDocuments({
-        recipient: userId,
-      }),
+    Notification.countDocuments({
+      recipient: userId,
+    }),
 
-      Notification.countDocuments({
-        recipient: userId,
-        isRead: false,
-      }),
-    ]);
+    Notification.countDocuments({
+      recipient: userId,
+      isRead: false,
+    }),
+  ]);
 
   return {
     success: true,
@@ -64,8 +61,7 @@ export const getNotifications = async (
     totalPages: Math.ceil(totalNotifications / limit),
     totalNotifications,
     unreadCount,
-    hasNextPage:
-      page < Math.ceil(totalNotifications / limit),
+    hasNextPage: page < Math.ceil(totalNotifications / limit),
     hasPreviousPage: page > 1,
     notifications,
   };
@@ -85,10 +81,7 @@ export const getUnreadNotificationCount = async (userId) => {
 };
 
 // Mark Single Notification As Read
-export const markNotificationAsRead = async (
-  userId,
-  notificationId,
-) => {
+export const markNotificationAsRead = async (userId, notificationId) => {
   const notification = await Notification.findOne({
     _id: notificationId,
     recipient: userId,

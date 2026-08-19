@@ -4,7 +4,8 @@ import {
   getMyApplications,
   withdrawApplication,
   getInternshipApplicants,
-  updateApplicationStatus
+  updateApplicationStatus,
+  getRecruiterApplications
 } from "../services/application.service.js";
 
 export const applyForInternship = asyncHandler(async (req, res) => {
@@ -34,7 +35,7 @@ export const withdrawStudentApplication = asyncHandler(async (req, res) => {
 export const getRecruiterApplicants = asyncHandler(async (req, res) => {
   const result = await getInternshipApplicants(
     req.user._id,
-    req.params.internshipId
+    req.params.internshipId,
   );
 
   return res.status(200).json(result);
@@ -47,8 +48,14 @@ export const updateApplication = asyncHandler(async (req, res) => {
     req.user._id,
     req.params.applicationId,
     status,
-    recruiterRemark
+    recruiterRemark,
   );
+
+  return res.status(200).json(result);
+});
+
+export const getRecruiterApplicationsData = asyncHandler(async (req, res) => {
+  const result = await getRecruiterApplications(req.user._id, req.query);
 
   return res.status(200).json(result);
 });

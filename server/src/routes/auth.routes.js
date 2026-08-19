@@ -5,15 +5,20 @@ import {
   login,
   forgotPassword,
   resetPassword,
-   getMe,
+  getMe,
+  updateProfile,
+  changePassword,
 } from "../controllers/auth.controller.js";
-
 const router = express.Router();
 
 router.post("/register", register);
 router.post("/login", login);
 
 router.get("/me", protect, getMe);
+
+router.patch("/profile", protect, updateProfile);
+
+router.patch("/change-password", protect, changePassword);
 
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);

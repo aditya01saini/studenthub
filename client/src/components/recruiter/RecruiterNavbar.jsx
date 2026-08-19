@@ -1,45 +1,55 @@
-import { FaBell, FaUserCircle } from "react-icons/fa";
+import { Bell, Search, ChevronDown } from "lucide-react";
 
 const RecruiterNavbar = () => {
   return (
-    <header className="sticky top-0 z-30 flex h-20 items-center justify-between border-b border-slate-200 bg-white px-8">
+    <header className="flex h-20 items-center justify-between border-b border-slate-200 bg-white px-8">
       {/* Left */}
       <div>
-        <h2 className="text-2xl font-bold text-slate-900">
+        <h2 className="text-2xl font-bold text-slate-800">
           Recruiter Dashboard
         </h2>
 
-        <p className="mt-1 text-sm text-slate-500">
-          Welcome back! Manage your internships and applications.
-        </p>
+        <p className="text-sm text-slate-500">Welcome back 👋</p>
       </div>
 
       {/* Right */}
-      <div className="flex items-center gap-5">
-        <button
-          type="button"
-          className="relative rounded-full bg-slate-100 p-3 transition hover:bg-slate-200"
-        >
-          <FaBell className="text-lg text-slate-700" />
+      <div className="flex items-center gap-6">
+        {/* Search */}
+        <div className="relative hidden md:block">
+          <Search
+            size={18}
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+          />
+
+          <input
+            type="text"
+            placeholder="Search..."
+            className="w-72 rounded-xl border border-slate-300 py-2 pl-11 pr-4 outline-none transition focus:border-indigo-600"
+          />
+        </div>
+
+        {/* Notification */}
+        <button className="relative rounded-xl p-3 transition hover:bg-slate-100">
+          <Bell size={22} />
 
           <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500"></span>
         </button>
 
-        <button
-          type="button"
-          className="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-2 transition hover:bg-slate-50"
-        >
-          <FaUserCircle className="text-3xl text-indigo-600" />
+        {/* Recruiter */}
+        <button className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-2 transition hover:bg-slate-100">
+          <img
+            src="https://ui-avatars.com/api/?name=Recruiter"
+            alt="Recruiter"
+            className="h-10 w-10 rounded-full"
+          />
 
-          <div className="text-left">
-            <p className="text-sm font-semibold text-slate-900">
-              Recruiter
-            </p>
+          <div className="hidden text-left lg:block">
+            <p className="text-sm font-semibold text-slate-800">Recruiter</p>
 
-            <p className="text-xs text-slate-500">
-              Company Account
-            </p>
+            <p className="text-xs text-slate-500">Company Account</p>
           </div>
+
+          <ChevronDown size={18} className="text-slate-500" />
         </button>
       </div>
     </header>

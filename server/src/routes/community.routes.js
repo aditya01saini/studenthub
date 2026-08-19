@@ -1,76 +1,34 @@
 import express from "express";
 
 import {
-  followStudentController,
-  unfollowStudentController,
-  getStudentFollowersController,
-  getStudentFollowingController,
-  bookmarkResourceController,
-  removeBookmarkController,
-  getMyBookmarksController,
-  getCommunityFeedController,
-  getFollowStatusController,
+  createPost,
+  getPosts,
+  getPostById,
+  updatePost,
+  deletePost,
+  togglePostLike,
 } from "../controllers/community.controller.js";
 
 import { protect } from "../middlewares/auth.middleware.js";
-import authorize from "../middlewares/role.middleware.js";
 
 const router = express.Router();
 
-// Follow Student
-router.post(
-  "/students/:studentId/follow",
-  protect,
-  authorize("student"),
-  followStudentController,
-);
+// Get all community posts
+router.get("/", protect, getPosts);
 
-// Unfollow Student
-router.delete(
-  "/students/:studentId/follow",
-  protect,
-  authorize("student"),
-  unfollowStudentController,
-);
+// Create a community post
+router.post("/", protect, createPost);
 
-// Get Student Followers
-router.get("/students/:studentId/followers", getStudentFollowersController);
+// Get single community post
+router.get("/:postId", protect, getPostById);
 
-// Get Student Following
-router.get("/students/:studentId/following", getStudentFollowingController);
+// Update own community post
+router.patch("/:postId", protect, updatePost);
 
-// Get Logged-in Student Bookmarks
-router.get(
-  "/bookmarks",
-  protect,
-  authorize("student"),
-  getMyBookmarksController,
-);
+// Delete own community post
+router.delete("/:postId", protect, deletePost);
 
-// Bookmark Project / Note / Internship
-router.post(
-  "/bookmarks/:resourceType/:resourceId",
-  protect,
-  authorize("student"),
-  bookmarkResourceController,
-);
+// Like / Unlike post
+router.post("/:postId/like", protect, togglePostLike);
 
-// Remove Bookmark
-router.delete(
-  "/bookmarks/:resourceType/:resourceId",
-  protect,
-  authorize("student"),
-  removeBookmarkController,
-);
-
-// Community Feed
-router.get("/feed", protect, authorize("student"), getCommunityFeedController);
-
-// Check Follow Status
-router.get(
-  "/students/:studentId/follow-status",
-  protect,
-  authorize("student"),
-  getFollowStatusController,
-);
 export default router;

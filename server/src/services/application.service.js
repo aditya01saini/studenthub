@@ -390,3 +390,55 @@ export const updateApplicationStatus = async (
     application,
   };
 };
+
+export const getRecruiterApplications = async (userId, query) => {
+  const recruiter = await RecruiterProfile.findOne({
+    user: userId,
+  });
+
+  if (!recruiter) {
+    const error = new Error("Recruiter profile not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const { page = 1, limit = 10, search = "", status, sort = "latest" } = query;
+
+  const filter = {
+    recruiter: recruiter._id,
+  };
+
+  // Status Filter
+  if (status && status !== "All") {
+    filter.status = status;
+  }
+
+  const applications = await Application.find(filter)
+    .populate({
+      path: "student",
+      select: "college course profileImage skills",
+      populate: {
+        path: "user",
+        select: "fullName email",
+      },
+    })
+    .populate({
+      path: "internship",
+      select: "title category workMode",
+    })
+    .sort({
+      appliedAt: sort === "oldest" ? 1 : -1,
+    })
+    .skip((Number(page) - 1) * Number(limit))
+    .limit(Number(limit));
+
+  const totalResults = await Application.countDocuments(filter);
+
+  return {
+    success: true,
+    page: Number(page),
+    totalPages: Math.ceil(totalResults / limit),
+    totalResults,
+    applications,
+  };
+};

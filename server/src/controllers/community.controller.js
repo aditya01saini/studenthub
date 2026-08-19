@@ -1,124 +1,112 @@
 import asyncHandler from "../utils/asyncHandler.js";
-
+import { validateCommunityPost } from "../utils/validateCommunity.js";
 import {
-  followStudent,
-  unfollowStudent,
-  getStudentFollowers,
-  getStudentFollowing,
-  bookmarkResource,
-  removeBookmark,
-  getMyBookmarks,
-  getCommunityFeed,
-  getFollowStatus
+  createCommunityPost,
+  getCommunityPosts,
+  getCommunityPostById,
+  updateCommunityPost,
+  deleteCommunityPost,
+  toggleCommunityPostLike,
 } from "../services/community.service.js";
 
-// Follow Student
-export const followStudentController = asyncHandler(
-  async (req, res) => {
-    const result = await followStudent(
-      req.user._id,
-      req.params.studentId,
-    );
+// =====================================================
+// Create Post
+// =====================================================
 
-    return res.status(201).json(result);
-  },
-);
+export const createPost = asyncHandler(async (req, res) => {
+  const { title, content, category } = req.body;
 
-// Unfollow Student
-export const unfollowStudentController = asyncHandler(
-  async (req, res) => {
-    const result = await unfollowStudent(
-      req.user._id,
-      req.params.studentId,
-    );
+  const validation = validateCommunityPost({
+    title,
+    content,
+    category,
+  });
 
-    return res.status(200).json(result);
-  },
-);
+  if (!validation.isValid) {
+    return res.status(400).json({
+      success: false,
+      message: "Validation failed",
+      errors: validation.errors,
+    });
+  }
 
-// Get Student Followers
-export const getStudentFollowersController = asyncHandler(
-  async (req, res) => {
-    const result = await getStudentFollowers(
-      req.params.studentId,
-    );
+  const result = await createCommunityPost({
+    userId: req.user._id,
+    title: title.trim(),
+    content: content.trim(),
+    category,
+  });
 
-    return res.status(200).json(result);
-  },
-);
+  return res.status(201).json(result);
+});
 
-// Get Student Following
-export const getStudentFollowingController = asyncHandler(
-  async (req, res) => {
-    const result = await getStudentFollowing(
-      req.params.studentId,
-    );
+// =====================================================
+// Get Posts
+// =====================================================
 
-    return res.status(200).json(result);
-  },
-);
+export const getPosts = asyncHandler(async (req, res) => {
+  const { page, limit, search, category } = req.query;
 
-// Bookmark Resource
-export const bookmarkResourceController = asyncHandler(
-  async (req, res) => {
-    const result = await bookmarkResource(
-      req.user._id,
-      req.params.resourceType,
-      req.params.resourceId,
-    );
+  const result = await getCommunityPosts({
+    page,
+    limit,
+    search,
+    category,
+  });
 
-    return res.status(201).json(result);
-  },
-);
+  return res.status(200).json(result);
+});
 
-// Remove Bookmark
-export const removeBookmarkController = asyncHandler(
-  async (req, res) => {
-    const result = await removeBookmark(
-      req.user._id,
-      req.params.resourceType,
-      req.params.resourceId,
-    );
+// =====================================================
+// Get Single Post
+// =====================================================
 
-    return res.status(200).json(result);
-  },
-);
+export const getPostById = asyncHandler(async (req, res) => {
+  const result = await getCommunityPostById(req.params.postId);
 
-// Get My Bookmarks
-export const getMyBookmarksController = asyncHandler(
-  async (req, res) => {
-    const result = await getMyBookmarks(
-      req.user._id,
-      req.query.type,
-    );
+  return res.status(200).json(result);
+});
 
-    return res.status(200).json(result);
-  },
-);
+// =====================================================
+// Update Own Post
+// =====================================================
 
-// Get Community Feed
-export const getCommunityFeedController = asyncHandler(
-  async (req, res) => {
-    const { page, limit } = req.query;
+export const updatePost = asyncHandler(async (req, res) => {
+  const { title, content, category } = req.body;
 
-    const result = await getCommunityFeed(
-      req.user._id,
-      page,
-      limit,
-    );
+  const result = await updateCommunityPost({
+    postId: req.params.postId,
+    userId: req.user._id,
+    title,
+    content,
+    category,
+  });
 
-    return res.status(200).json(result);
-  },
-);
+  return res.status(200).json(result);
+});
 
-// Check Follow Status
-export const getFollowStatusController = asyncHandler(
-  async (req, res) => {
-    const result = await getFollowStatus(
-      req.user._id,
-      req.params.studentId,
-    );
+// =====================================================
+// Delete Own Post
+// =====================================================
 
-    return res.status(200).json(result);
-  },
-);
+export const deletePost = asyncHandler(async (req, res) => {
+  const result = await deleteCommunityPost({
+    postId: req.params.postId,
+    userId: req.user._id,
+  });
+
+  return res.status(200).json(result);
+});
+
+// =====================================================
+// Like / Unlike Post
+// =====================================================
+
+export const togglePostLike = asyncHandler(async (req, res) => {
+  const result = await toggleCommunityPostLike({
+    postId: req.params.postId,
+    userId: req.user._id,
+  });
+
+  return res.status(200).json(result);
+});

@@ -5,7 +5,7 @@ import {
   updateInternship,
   deleteInternship,
   getSingleInternship,
-  getAllInternships
+  getAllInternships,
 } from "../services/internship.service.js";
 
 export const createRecruiterInternship = asyncHandler(async (req, res) => {
@@ -15,7 +15,7 @@ export const createRecruiterInternship = asyncHandler(async (req, res) => {
 });
 
 export const getMyInternships = asyncHandler(async (req, res) => {
-  const result = await getRecruiterInternships(req.user._id);
+  const result = await getRecruiterInternships(req.user._id, req.query);
 
   return res.status(200).json(result);
 });
@@ -26,17 +26,13 @@ export const updateRecruiterInternship = asyncHandler(async (req, res) => {
   return res.status(200).json(result);
 });
 
-export const deleteRecruiterInternship =
-  asyncHandler(async (req, res) => {
-    const result = await deleteInternship(
-      req.user._id,
-      req.params.id
-    );
+export const deleteRecruiterInternship = asyncHandler(async (req, res) => {
+  const result = await deleteInternship(req.user._id, req.params.id);
 
-    return res.status(200).json(result);
-  });
+  return res.status(200).json(result);
+});
 
-  export const getInternship = asyncHandler(async (req, res) => {
+export const getInternship = asyncHandler(async (req, res) => {
   const result = await getSingleInternship(req.params.id);
 
   return res.status(200).json(result);

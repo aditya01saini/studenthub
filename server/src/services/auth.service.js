@@ -99,3 +99,153 @@ export const loginUser = async (userData) => {
     user: userResponse,
   };
 };
+
+// ==========================================
+// Update User Profile
+// ==========================================
+
+export const updateUserProfile = async (
+  userId,
+  userData,
+) => {
+  const { fullName, email } = userData;
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    const error = new Error("User not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  // Update Full Name
+  if (fullName !== undefined) {
+    const trimmedName = fullName.trim();
+
+    if (!trimmedName) {
+      const error = new Error(
+        "Full name cannot be empty",
+      );
+
+      error.statusCode = 400;
+      throw error;
+    }
+
+    user.fullName = trimmedName;
+  }
+
+  // Update Email
+  if (email !== undefined) {
+    const normalizedEmail =
+      email.trim().toLowerCase();
+
+    if (!normalizedEmail) {
+      const error = new Error(
+        "Email cannot be empty",
+      );
+
+      error.statusCode = 400;
+      throw error;
+    }
+
+    const existingUser =
+      await User.findOne({
+        email: normalizedEmail,
+        _id: { $ne: userId },
+      });
+
+    if (existingUser) {
+      const error = new Error(
+        "Email already exists",
+      );
+
+      error.statusCode = 409;
+      throw error;
+    }
+
+    user.email = normalizedEmail;
+  }
+
+  await user.save();
+
+  const userResponse = user.toObject();
+
+  delete userResponse.password;
+
+  return {
+    success: true,
+    message: "Profile updated successfully",
+    user: userResponse,
+  };
+};
+
+
+// ==========================================
+// Change Password
+// ==========================================
+
+export const changeUserPassword = async (
+  userId,
+  currentPassword,
+  newPassword,
+) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    const error = new Error("User not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (!currentPassword || !newPassword) {
+    const error = new Error(
+      "Current password and new password are required",
+    );
+
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (newPassword.length < 6) {
+    const error = new Error(
+      "New password must be at least 6 characters",
+    );
+
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const isMatch =
+    await user.comparePassword(
+      currentPassword,
+    );
+
+  if (!isMatch) {
+    const error = new Error(
+      "Current password is incorrect",
+    );
+
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (
+    currentPassword === newPassword
+  ) {
+    const error = new Error(
+      "New password must be different from current password",
+    );
+
+    error.statusCode = 400;
+    throw error;
+  }
+
+  user.password = newPassword;
+
+  await user.save();
+
+  return {
+    success: true,
+    message: "Password changed successfully",
+  };
+};
