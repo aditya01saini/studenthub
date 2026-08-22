@@ -12,9 +12,7 @@ const LatestInternships = () => {
   const navigate = useNavigate();
 
   const [internships, setInternships] = useState([]);
-
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState("");
 
   // ==========================================
@@ -61,8 +59,12 @@ const LatestInternships = () => {
   };
 
   return (
-    <section className="bg-white py-20">
+    <section className="bg-white py-14">
       <Container>
+        {/* ==========================================
+            SECTION TITLE
+        ========================================== */}
+
         <SectionTitle
           title="Latest Internships"
           subtitle="Discover internship opportunities from top companies."
@@ -73,7 +75,7 @@ const LatestInternships = () => {
         ========================================== */}
 
         {loading && (
-          <div className="rounded-2xl bg-slate-50 p-10 text-center text-slate-500">
+          <div className="rounded-2xl bg-slate-50 p-8 text-center text-slate-500">
             Loading latest internships...
           </div>
         )}
@@ -83,8 +85,16 @@ const LatestInternships = () => {
         ========================================== */}
 
         {!loading && error && (
-          <div className="rounded-2xl bg-red-50 p-10 text-center text-red-600">
-            {error}
+          <div className="rounded-2xl bg-red-50 p-8 text-center text-red-600">
+            <p>{error}</p>
+
+            <button
+              type="button"
+              onClick={fetchLatestInternships}
+              className="mt-4 rounded-lg bg-red-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
+            >
+              Try Again
+            </button>
           </div>
         )}
 
@@ -93,7 +103,7 @@ const LatestInternships = () => {
         ========================================== */}
 
         {!loading && !error && internships.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center text-slate-500">
+          <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center text-slate-500">
             No internships available right now.
           </div>
         )}
@@ -103,7 +113,7 @@ const LatestInternships = () => {
         ========================================== */}
 
         {!loading && !error && internships.length > 0 && (
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {internships.map((internship) => (
               <InternshipCard
                 key={internship._id}
@@ -127,7 +137,7 @@ const LatestInternships = () => {
             VIEW ALL
         ========================================== */}
 
-        <div className="mt-14 flex justify-center">
+        <div className="mt-10 flex justify-center">
           <Button type="button" onClick={handleViewAll}>
             View All Internships →
           </Button>

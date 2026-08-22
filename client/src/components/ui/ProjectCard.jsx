@@ -64,67 +64,60 @@ const ProjectCard = ({
   };
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-indigo-200 hover:shadow-2xl">
+    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-xl">
       {/* ==========================================
           PROJECT IMAGE
       ========================================== */}
 
-      <div className="relative h-56 overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-blue-50">
+      <div className="relative h-44 overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-blue-50">
         {thumbnail ? (
           <img
             src={thumbnail}
             alt={title}
-            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
-            <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-white text-indigo-500 shadow-lg">
-              <FaCode className="text-3xl" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-indigo-500 shadow-md">
+              <FaCode className="text-2xl" />
             </div>
           </div>
         )}
 
         {/* Overlay */}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-transparent" />
 
-        {/* ==========================================
-            FEATURED
-        ========================================== */}
+        {/* Featured */}
 
         {featured && (
-          <div className="absolute left-4 top-4">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-white/95 px-3 py-1.5 text-xs font-bold text-indigo-700 shadow-lg backdrop-blur-md">
-              <span className="text-sm">★</span>
+          <div className="absolute left-3 top-3">
+            <span className="inline-flex items-center gap-1 rounded-full border border-white/30 bg-white/90 px-2.5 py-1 text-[11px] font-bold text-indigo-700 shadow-md backdrop-blur">
+              <span>★</span>
               Featured
             </span>
           </div>
         )}
 
-        {/* ==========================================
-            STATUS
-        ========================================== */}
+        {/* Status */}
 
-        <div className="absolute right-4 top-4">
+        <div className="absolute right-3 top-3">
           <span
-            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold shadow-lg backdrop-blur-md ${
+            className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-semibold shadow-md backdrop-blur ${
               isCompleted
                 ? "border-emerald-200 bg-emerald-50/95 text-emerald-700"
                 : "border-amber-200 bg-amber-50/95 text-amber-700"
             }`}
           >
             {isCompleted ? <FaCheckCircle /> : <FaClock />}
-
             {projectStatus}
           </span>
         </div>
 
-        {/* ==========================================
-            CATEGORY
-        ========================================== */}
+        {/* Category */}
 
-        <div className="absolute bottom-4 left-4">
-          <span className="rounded-lg bg-slate-900/75 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-md">
+        <div className="absolute bottom-3 left-3">
+          <span className="rounded-md bg-slate-900/75 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur">
             {category || "Project"}
           </span>
         </div>
@@ -134,21 +127,17 @@ const ProjectCard = ({
           CONTENT
       ========================================== */}
 
-      <div className="flex flex-1 flex-col p-6">
-        {/* ==========================================
-            TITLE
-        ========================================== */}
+      <div className="flex flex-1 flex-col p-5">
+        {/* Title */}
 
-        <h3 className="line-clamp-2 text-xl font-bold leading-snug text-slate-900 transition-colors duration-200 group-hover:text-indigo-600">
+        <h3 className="line-clamp-2 text-lg font-bold leading-snug text-slate-900 transition-colors duration-200 group-hover:text-indigo-600">
           {title}
         </h3>
 
-        {/* ==========================================
-            STUDENT
-        ========================================== */}
+        {/* Student */}
 
-        <div className="mt-4 flex items-center gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-indigo-50 text-indigo-600">
+        <div className="mt-3 flex items-center gap-2.5">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-indigo-50 text-indigo-600">
             {studentImage ? (
               <img
                 src={studentImage}
@@ -156,37 +145,33 @@ const ProjectCard = ({
                 className="h-full w-full object-cover"
               />
             ) : (
-              <FaUser className="text-sm" />
+              <FaUser className="text-xs" />
             )}
           </div>
 
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-slate-800">
+            <p className="truncate text-xs font-semibold text-slate-800">
               {studentName}
             </p>
 
-            <p className="text-xs text-slate-400">Student Project</p>
+            <p className="text-[11px] text-slate-400">Student Project</p>
           </div>
         </div>
 
-        {/* ==========================================
-            DESCRIPTION
-        ========================================== */}
+        {/* Description */}
 
-        <p className="mt-4 line-clamp-3 flex-1 text-sm leading-6 text-slate-600">
+        <p className="mt-3 line-clamp-2 flex-1 text-sm leading-5 text-slate-600">
           {description}
         </p>
 
-        {/* ==========================================
-            TECH STACK
-        ========================================== */}
+        {/* Tech Stack */}
 
         {techStack.length > 0 && (
-          <div className="mt-5 flex flex-wrap gap-2">
-            {techStack.slice(0, 4).map((tech, index) => (
+          <div className="mt-4 flex flex-wrap gap-1.5">
+            {techStack.slice(0, 3).map((tech, index) => (
               <span
                 key={`${tech}-${index}`}
-                className={`rounded-lg border px-2.5 py-1 text-[11px] font-semibold ${
+                className={`rounded-md border px-2 py-1 text-[10px] font-semibold ${
                   colors[tech] || "border-slate-200 bg-slate-50 text-slate-600"
                 }`}
               >
@@ -194,62 +179,52 @@ const ProjectCard = ({
               </span>
             ))}
 
-            {techStack.length > 4 && (
-              <span className="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-semibold text-slate-500">
-                +{techStack.length - 4}
+            {techStack.length > 3 && (
+              <span className="rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-[10px] font-semibold text-slate-500">
+                +{techStack.length - 3}
               </span>
             )}
           </div>
         )}
 
-        {/* ==========================================
-            DIVIDER
-        ========================================== */}
+        {/* Divider */}
 
-        <div className="my-5 border-t border-slate-100" />
+        <div className="my-4 border-t border-slate-100" />
 
-        {/* ==========================================
-            STATS
-        ========================================== */}
+        {/* Stats */}
 
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500">
+          <div className="flex items-center gap-3">
+            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-500">
               <FaEye className="text-indigo-500" />
-
               {Number(viewsCount).toLocaleString("en-IN")}
             </span>
 
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500">
+            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-500">
               <FaHeart className="text-rose-500" />
-
               {Number(likesCount).toLocaleString("en-IN")}
             </span>
           </div>
 
-          <span className="text-xs font-medium text-slate-400">
-            {techStack.length} technologies
+          <span className="text-[11px] font-medium text-slate-400">
+            {techStack.length} tech
           </span>
         </div>
 
-        {/* ==========================================
-            VIEW PROJECT
-        ========================================== */}
+        {/* View Project */}
 
         <button
           type="button"
           onClick={handleViewProject}
-          className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-3 text-sm font-semibold text-indigo-700 transition-all duration-300 hover:border-indigo-600 hover:bg-indigo-600 hover:text-white"
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-2 text-xs font-semibold text-indigo-700 transition-all duration-300 hover:border-indigo-600 hover:bg-indigo-600 hover:text-white"
         >
           View Project
-          <FaArrowRight className="text-xs transition-transform duration-300 group-hover:translate-x-1" />
+          <FaArrowRight className="text-[10px] transition-transform duration-300 group-hover:translate-x-1" />
         </button>
 
-        {/* ==========================================
-            GITHUB + LIVE DEMO
-        ========================================== */}
+        {/* GitHub + Live Demo */}
 
-        <div className="mt-3 grid grid-cols-2 gap-3">
+        <div className="mt-2.5 grid grid-cols-2 gap-2.5">
           {/* GitHub */}
 
           {githubUrl ? (
@@ -259,14 +234,17 @@ const ProjectCard = ({
               rel="noopener noreferrer"
               className="block"
             >
-              <Button className="w-full justify-center">
-                <FaGithub className="mr-2" />
+              <Button className="w-full justify-center text-xs">
+                <FaGithub className="mr-1.5" />
                 GitHub
               </Button>
             </a>
           ) : (
-            <Button disabled className="w-full justify-center opacity-40">
-              <FaGithub className="mr-2" />
+            <Button
+              disabled
+              className="w-full justify-center text-xs opacity-40"
+            >
+              <FaGithub className="mr-1.5" />
               GitHub
             </Button>
           )}
@@ -280,8 +258,11 @@ const ProjectCard = ({
               rel="noopener noreferrer"
               className="block"
             >
-              <Button variant="secondary" className="w-full justify-center">
-                <FaExternalLinkAlt className="mr-2" />
+              <Button
+                variant="secondary"
+                className="w-full justify-center text-xs"
+              >
+                <FaExternalLinkAlt className="mr-1.5" />
                 Live Demo
               </Button>
             </a>
@@ -289,9 +270,9 @@ const ProjectCard = ({
             <Button
               variant="secondary"
               disabled
-              className="w-full justify-center opacity-40"
+              className="w-full justify-center text-xs opacity-40"
             >
-              <FaExternalLinkAlt className="mr-2" />
+              <FaExternalLinkAlt className="mr-1.5" />
               Live Demo
             </Button>
           )}

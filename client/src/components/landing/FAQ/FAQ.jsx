@@ -37,25 +37,22 @@ const faqs = [
 
 const FAQ = () => {
   return (
-    <section className="bg-white py-20">
+    <section className="bg-white py-14">
       <Container>
+        {/* Section Title */}
 
         <SectionTitle
           title="Frequently Asked Questions"
           subtitle="Everything you need to know about StudentHub."
         />
 
-        <div className="mx-auto max-w-4xl space-y-5">
+        {/* FAQ List */}
 
+        <div className="mx-auto max-w-4xl space-y-4">
           {faqs.map((faq) => (
-            <FAQItem
-              key={faq.id}
-              {...faq}
-            />
+            <FAQItem key={faq.id} {...faq} />
           ))}
-
         </div>
-
       </Container>
     </section>
   );

@@ -11,43 +11,33 @@ import Container from "../../ui/Container";
 const Footer = () => {
   return (
     <footer className="bg-slate-900 text-slate-300">
-
       <Container>
-
-        <div className="grid gap-12 border-b border-slate-800 py-16 md:grid-cols-2 lg:grid-cols-4">
-
+        {/* Main Footer */}
+        <div className="grid gap-8 border-b border-slate-800 py-10 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
-
           <div>
+            <div className="flex items-center gap-2">
+              <FaGraduationCap className="text-2xl text-indigo-500" />
 
-            <div className="flex justify-center items-center gap-3">
-
-              <FaGraduationCap className="text-3xl text-indigo-500" />
-
-              <h2 className="text-2xl font-bold text-white">
+              <h2 className="text-xl font-bold text-white">
                 Student
                 <span className="text-indigo-500">Hub</span>
               </h2>
-
             </div>
 
-            <p className="mt-5 leading-7">
-              StudentHub helps students share notes, showcase projects,
-              discover internships and build professional portfolios.
+            <p className="mt-4 max-w-sm text-sm leading-6 text-slate-400">
+              StudentHub helps students share notes, showcase projects, discover
+              internships and build professional portfolios.
             </p>
-
           </div>
 
           {/* Quick Links */}
-
           <div>
-
-            <h3 className="mb-5 text-xl font-semibold text-white">
+            <h3 className="mb-4 text-base font-semibold text-white">
               Quick Links
             </h3>
 
-            <ul className="space-y-3 inline-block">
-
+            <ul className="space-y-2 text-sm">
               <li className="cursor-pointer transition hover:text-indigo-400">
                 Home
               </li>
@@ -63,21 +53,16 @@ const Footer = () => {
               <li className="cursor-pointer transition hover:text-indigo-400">
                 Internships
               </li>
-
             </ul>
-
           </div>
 
           {/* Resources */}
-
           <div>
-
-            <h3 className="mb-5 text-xl font-semibold text-white">
+            <h3 className="mb-4 text-base font-semibold text-white">
               Resources
             </h3>
 
-            <ul className="space-y-3 inline-block">
-
+            <ul className="space-y-2 text-sm">
               <li className="cursor-pointer transition hover:text-indigo-400">
                 Community
               </li>
@@ -93,57 +78,52 @@ const Footer = () => {
               <li className="cursor-pointer transition hover:text-indigo-400">
                 Terms & Conditions
               </li>
-
             </ul>
-
           </div>
 
           {/* Social */}
-
           <div>
-
-            <h3 className="mb-5 text-xl font-semibold text-white">
+            <h3 className="mb-4 text-base font-semibold text-white">
               Connect With Us
             </h3>
 
-            <div className="flex justify-center gap-4">
-
-              <button className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-800 transition hover:bg-indigo-600">
+            <div className="flex gap-3 justify-center">
+              <a
+                href="#"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-800 text-lg transition hover:bg-indigo-600 hover:text-white"
+              >
                 <FaGithub />
-              </button>
+              </a>
 
-              <button className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-800 transition hover:bg-indigo-600">
+              <a
+                href="#"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-800 text-lg transition hover:bg-indigo-600 hover:text-white"
+              >
                 <FaLinkedin />
-              </button>
+              </a>
 
-              <button className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-800 transition hover:bg-indigo-600">
+              <a
+                href="#"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-800 text-lg transition hover:bg-indigo-600 hover:text-white"
+              >
                 <FaInstagram />
-              </button>
+              </a>
 
-              <button className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-800 transition hover:bg-indigo-600">
+              <a
+                href="#"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-800 text-lg transition hover:bg-indigo-600 hover:text-white"
+              >
                 <FaTwitter />
-              </button>
-
+              </a>
             </div>
-
           </div>
-
         </div>
 
         {/* Bottom */}
-
-        <div className="flex flex-col items-center justify-center gap-4 py-6 text-sm text-slate-400 md:flex-row">
-
-          <p>
-            © 2026 StudentHub. All Rights Reserved.
-          </p>
-
-          
-
+        <div className="py-5 text-center text-xs text-slate-500">
+          © 2026 StudentHub. All Rights Reserved.
         </div>
-
       </Container>
-
     </footer>
   );
 };

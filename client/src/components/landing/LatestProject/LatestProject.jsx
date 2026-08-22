@@ -12,7 +12,6 @@ const LatestProjects = () => {
   const navigate = useNavigate();
 
   const [projects, setProjects] = useState([]);
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -59,7 +58,7 @@ const LatestProjects = () => {
   };
 
   return (
-    <section className="bg-slate-50 py-20">
+    <section className="bg-slate-50 py-12 sm:py-14 lg:py-16">
       <Container>
         {/* ==========================================
             SECTION TITLE
@@ -75,10 +74,10 @@ const LatestProjects = () => {
         ========================================== */}
 
         {loading && (
-          <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm">
-            <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-indigo-600" />
+          <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+            <div className="mx-auto h-7 w-7 animate-spin rounded-full border-4 border-slate-200 border-t-indigo-600" />
 
-            <p className="mt-4 text-sm text-slate-500">
+            <p className="mt-3 text-sm text-slate-500">
               Loading latest projects...
             </p>
           </div>
@@ -89,13 +88,13 @@ const LatestProjects = () => {
         ========================================== */}
 
         {!loading && error && (
-          <div className="mt-10 rounded-2xl border border-red-100 bg-red-50 p-10 text-center">
-            <p className="font-medium text-red-600">{error}</p>
+          <div className="mt-8 rounded-2xl border border-red-100 bg-red-50 p-8 text-center">
+            <p className="text-sm font-medium text-red-600">{error}</p>
 
             <button
               type="button"
               onClick={fetchLatestProjects}
-              className="mt-5 rounded-xl bg-red-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700"
+              className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
             >
               Try Again
             </button>
@@ -107,7 +106,7 @@ const LatestProjects = () => {
         ========================================== */}
 
         {!loading && !error && projects.length === 0 && (
-          <div className="mt-10 rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center">
+          <div className="mt-8 rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center">
             <h3 className="text-lg font-semibold text-slate-800">
               No projects available
             </h3>
@@ -123,7 +122,7 @@ const LatestProjects = () => {
         ========================================== */}
 
         {!loading && !error && projects.length > 0 && (
-          <div className="mt-10 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
             {projects.map((project) => (
               <ProjectCard key={project._id} {...project} />
             ))}
@@ -134,8 +133,13 @@ const LatestProjects = () => {
             VIEW ALL
         ========================================== */}
 
-        <div className="mt-14 flex justify-center">
-          <Button onClick={handleViewAllProjects}>View All Projects →</Button>
+        <div className="mt-8 flex justify-center">
+          <Button
+            onClick={handleViewAllProjects}
+            className="px-6 py-2.5 text-sm"
+          >
+            View All Projects →
+          </Button>
         </div>
       </Container>
     </section>

@@ -42,27 +42,34 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <section className="bg-slate-50 py-20">
+    <section className="bg-slate-50 py-12 sm:py-14 lg:py-16">
       <Container>
+        {/* Section Title */}
 
         <SectionTitle
           title="How StudentHub Works"
           subtitle="Follow these simple steps to start your learning and career journey."
         />
 
-        <div className="grid gap-10 lg:grid-cols-2">
+        {/* Steps */}
 
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:gap-6">
           {steps.map((step, index) => (
-            <StepCard
-              key={step.id}
-              icon={step.icon}
-              title={step.title}
-              description={step.description}
-            />
+            <div key={step.id} className="relative">
+              <StepCard
+                icon={step.icon}
+                title={step.title}
+                description={step.description}
+              />
+
+              {/* Step Number */}
+
+              <div className="pointer-events-none absolute -left-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-indigo-600 text-xs font-bold text-white shadow-md">
+                {index + 1}
+              </div>
+            </div>
           ))}
-
         </div>
-
       </Container>
     </section>
   );

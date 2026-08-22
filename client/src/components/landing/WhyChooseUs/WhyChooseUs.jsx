@@ -42,109 +42,120 @@ const reasons = [
 
 const WhyChooseUs = () => {
   return (
-    <section className="bg-white py-20">
+    <section className="bg-white py-12 sm:py-14 lg:py-16">
       <Container>
+        {/* Section Title */}
 
         <SectionTitle
           title="Why Choose StudentHub?"
           subtitle="Everything you need to learn, build your portfolio and launch your career from one platform."
         />
 
-        <div className="grid items-center gap-16 lg:grid-cols-2">
+        {/* Main Content */}
 
-          {/* Left Side */}
+        <div className="mt-8 grid items-center gap-8 lg:grid-cols-2 lg:gap-10">
+          {/* ==========================================
+              LEFT SIDE
+          ========================================== */}
 
-          <div className="space-y-8">
-
+          <div className="space-y-4">
             {reasons.map((item) => {
               const Icon = item.icon;
 
               return (
                 <div
                   key={item.id}
-                  className="group flex items-start gap-5 rounded-2xl border border-slate-200 bg-white p-6 transition-all duration-300 hover:border-indigo-200 hover:shadow-lg"
+                  className="group flex items-start gap-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-lg sm:p-5"
                 >
+                  {/* Icon */}
 
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-100 transition-all duration-300 group-hover:bg-indigo-600">
-
-                    <Icon className="text-3xl text-indigo-600 transition-all duration-300 group-hover:text-white" />
-
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 transition-all duration-300 group-hover:bg-indigo-600">
+                    <Icon className="text-xl text-indigo-600 transition-colors duration-300 group-hover:text-white" />
                   </div>
 
-                  <div>
+                  {/* Content */}
 
-                    <h3 className="text-xl font-bold text-slate-900">
+                  <div>
+                    <h3 className="text-base font-bold text-slate-900 sm:text-lg">
                       {item.title}
                     </h3>
 
-                    <p className="mt-2 leading-7 text-slate-600">
+                    <p className="mt-1.5 text-sm leading-6 text-slate-600">
                       {item.description}
                     </p>
-
                   </div>
-
                 </div>
               );
             })}
-
           </div>
 
-          {/* Right Side */}
+          {/* ==========================================
+              RIGHT SIDE
+          ========================================== */}
 
-          <div className="rounded-3xl bg-gradient-to-br from-indigo-600 to-purple-600 p-10 text-white shadow-2xl">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 to-purple-600 p-7 text-white shadow-xl sm:p-8">
+            {/* Decorative Circle */}
 
-            <h3 className="text-3xl font-bold">
-              StudentHub
-            </h3>
+            <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-white/10" />
 
-            <p className="mt-3 text-indigo-100">
-              One platform for learning, networking and career growth.
-            </p>
+            <div className="absolute -bottom-20 -left-10 h-40 w-40 rounded-full bg-white/10" />
 
-            <div className="mt-10 space-y-5">
+            <div className="relative">
+              {/* Heading */}
 
-              <div className="flex items-center gap-3">
-                <FaCheckCircle className="text-green-300" />
-                <span>15,000+ Active Students</span>
-              </div>
+              <h3 className="text-2xl font-bold sm:text-3xl">StudentHub</h3>
 
-              <div className="flex items-center gap-3">
-                <FaCheckCircle className="text-green-300" />
-                <span>1,200+ Projects Shared</span>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <FaCheckCircle className="text-green-300" />
-                <span>5,000+ Notes Available</span>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <FaCheckCircle className="text-green-300" />
-                <span>250+ Internship Opportunities</span>
-              </div>
-
-            </div>
-
-            <div className="mt-10 rounded-2xl bg-white/10 p-6 backdrop-blur">
-
-              <p className="text-sm uppercase tracking-widest text-indigo-200">
-                Student Success
+              <p className="mt-2 max-w-md text-sm leading-6 text-indigo-100 sm:text-base">
+                One platform for learning, networking and career growth.
               </p>
 
-              <h2 className="mt-2 text-5xl font-bold">
-                98%
-              </h2>
+              {/* Benefits */}
 
-              <p className="mt-2 text-indigo-100">
-                Students recommend StudentHub for learning, networking and career growth.
-              </p>
+              <div className="mt-7 space-y-3.5">
+                <div className="flex items-center gap-3 text-sm sm:text-base">
+                  <FaCheckCircle className="shrink-0 text-green-300" />
+                  <span>15,000+ Active Students</span>
+                </div>
 
+                <div className="flex items-center gap-3 text-sm sm:text-base">
+                  <FaCheckCircle className="shrink-0 text-green-300" />
+                  <span>1,200+ Projects Shared</span>
+                </div>
+
+                <div className="flex items-center gap-3 text-sm sm:text-base">
+                  <FaCheckCircle className="shrink-0 text-green-300" />
+                  <span>5,000+ Notes Available</span>
+                </div>
+
+                <div className="flex items-center gap-3 text-sm sm:text-base">
+                  <FaCheckCircle className="shrink-0 text-green-300" />
+                  <span>250+ Internship Opportunities</span>
+                </div>
+              </div>
+
+              {/* Success Card */}
+
+              <div className="mt-7 rounded-2xl border border-white/10 bg-white/10 p-5 backdrop-blur-sm">
+                <p className="text-xs font-semibold uppercase tracking-widest text-indigo-200">
+                  Student Success
+                </p>
+
+                <div className="mt-1 flex items-end gap-2">
+                  <h2 className="text-4xl font-extrabold sm:text-5xl">98%</h2>
+
+                  <span className="mb-1 text-sm text-indigo-200">
+                    satisfaction
+                  </span>
+                </div>
+
+                <p className="mt-2 text-sm leading-5 text-indigo-100">
+                  Students recommend StudentHub for learning, networking and
+                  career growth.
+                </p>
+              </div>
             </div>
-
           </div>
-
         </div>
-
       </Container>
     </section>
   );

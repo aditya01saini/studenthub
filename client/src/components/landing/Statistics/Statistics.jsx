@@ -15,7 +15,6 @@ const Statistics = () => {
   });
 
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState("");
 
   // ==========================================
@@ -54,6 +53,10 @@ const Statistics = () => {
     fetchStatistics();
   }, []);
 
+  // ==========================================
+  // STATISTICS DATA
+  // ==========================================
+
   const statisticsData = [
     {
       id: 1,
@@ -82,40 +85,63 @@ const Statistics = () => {
   ];
 
   return (
-    <section className="bg-white py-20">
+    <section className="bg-white py-12 sm:py-14 lg:py-16">
       <Container>
+        {/* ==========================================
+            SECTION TITLE
+        ========================================== */}
+
         <SectionTitle
           title="Trusted by Students Across India"
           subtitle="Thousands of students use StudentHub to share notes, showcase projects, and discover internships."
         />
 
-        {/* Error */}
+        {/* ==========================================
+            ERROR
+        ========================================== */}
 
         {error && (
-          <div className="mb-6 rounded-xl bg-red-50 p-4 text-center text-sm text-red-600">
+          <div className="mx-auto mb-5 max-w-2xl rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-center text-sm text-red-600">
             {error}
           </div>
         )}
 
-        {/* Statistics */}
+        {/* ==========================================
+            STATISTICS
+        ========================================== */}
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4 lg:gap-6">
           {statisticsData.map((item) => (
-            <Card key={item.id} className="text-center">
-              <h3 className="text-4xl font-bold text-indigo-600">
+            <Card
+              key={item.id}
+              className="group relative overflow-hidden border border-slate-100 bg-white p-5 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-indigo-100 hover:shadow-lg sm:p-6"
+            >
+              {/* Decorative Glow */}
+
+              <div className="pointer-events-none absolute -right-8 -top-8 h-20 w-20 rounded-full bg-indigo-50 opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100" />
+
+              {/* Number */}
+
+              <h3 className="relative text-3xl font-extrabold tracking-tight text-indigo-600 sm:text-4xl">
                 {loading ? (
-                  <span className="inline-block h-10 w-24 animate-pulse rounded-lg bg-slate-200" />
+                  <span className="mx-auto inline-block h-9 w-20 animate-pulse rounded-lg bg-slate-200 sm:h-10 sm:w-24" />
                 ) : (
                   <>
-                    {item.number.toLocaleString("en-IN")}
+                    {Number(item.number).toLocaleString("en-IN")}
                     {item.suffix}
                   </>
                 )}
               </h3>
 
-              <p className="mt-3 text-lg font-medium text-slate-600">
+              {/* Title */}
+
+              <p className="relative mt-2 text-sm font-semibold text-slate-600 sm:text-base">
                 {item.title}
               </p>
+
+              {/* Bottom Accent */}
+
+              <div className="mx-auto mt-4 h-1 w-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300 group-hover:w-12" />
             </Card>
           ))}
         </div>

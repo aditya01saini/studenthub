@@ -11,9 +11,7 @@ const TopStudents = () => {
   const navigate = useNavigate();
 
   const [students, setStudents] = useState([]);
-
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState("");
 
   // ==========================================
@@ -54,8 +52,12 @@ const TopStudents = () => {
   };
 
   return (
-    <section className="bg-white py-20">
+    <section className="bg-white py-12 sm:py-14 lg:py-16">
       <Container>
+        {/* ==========================================
+            SECTION TITLE
+        ========================================== */}
+
         <SectionTitle
           title="Top Student Contributors"
           subtitle="Meet some of our active students who regularly share projects, notes and help the community."
@@ -66,7 +68,7 @@ const TopStudents = () => {
         ========================================== */}
 
         {loading && (
-          <div className="rounded-2xl bg-slate-50 p-10 text-center text-slate-500">
+          <div className="mt-8 rounded-2xl border border-slate-100 bg-slate-50 p-8 text-center text-sm text-slate-500">
             Loading top students...
           </div>
         )}
@@ -76,7 +78,7 @@ const TopStudents = () => {
         ========================================== */}
 
         {!loading && error && (
-          <div className="rounded-2xl bg-red-50 p-10 text-center text-red-600">
+          <div className="mt-8 rounded-2xl border border-red-100 bg-red-50 p-8 text-center text-sm text-red-600">
             {error}
           </div>
         )}
@@ -86,7 +88,7 @@ const TopStudents = () => {
         ========================================== */}
 
         {!loading && !error && students.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center text-slate-500">
+          <div className="mt-8 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center text-sm text-slate-500">
             No students available right now.
           </div>
         )}
@@ -96,7 +98,7 @@ const TopStudents = () => {
         ========================================== */}
 
         {!loading && !error && students.length > 0 && (
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
             {students.slice(0, 3).map((student) => (
               <StudentCard
                 key={student.studentId}
@@ -122,11 +124,11 @@ const TopStudents = () => {
             VIEW ALL
         ========================================== */}
 
-        <div className="mt-14 flex justify-center">
+        <div className="mt-8 flex justify-center">
           <button
             type="button"
             onClick={handleViewAll}
-            className="rounded-xl bg-indigo-600 px-8 py-3 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-indigo-700"
+            className="rounded-xl bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-indigo-700 hover:shadow-md"
           >
             View All Students →
           </button>

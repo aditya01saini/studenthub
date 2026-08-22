@@ -35,33 +35,28 @@ const testimonials = [
 
 const Testimonials = () => {
   return (
-    <section className="bg-slate-50 py-20">
+    <section className="bg-slate-50 py-14">
       <Container>
+        {/* Section Title */}
 
         <SectionTitle
           title="What Students Say"
           subtitle="Hear from students who are already using StudentHub to learn, collaborate and grow."
         />
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {/* Testimonials */}
 
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((testimonial) => (
-            <TestimonialCard
-              key={testimonial.id}
-              {...testimonial}
-            />
+            <TestimonialCard key={testimonial.id} {...testimonial} />
           ))}
-
         </div>
 
-        <div className="mt-14 flex justify-center">
+        {/* View All */}
 
-          <Button>
-            View All Reviews →
-          </Button>
-
+        <div className="mt-10 flex justify-center">
+          <Button type="button">View All Reviews →</Button>
         </div>
-
       </Container>
     </section>
   );
