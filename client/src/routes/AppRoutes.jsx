@@ -15,28 +15,28 @@ import ProtectedRoute from "./ProtectedRoute";
 // Student
 // ===============================
 
-import StudentDashboard from "../pages/student/StudentDashboard.jsx";
+import StudentDashboard from "../pages/Student/StudentDashboard.jsx";
 import StudentLayout from "../layouts/StudentLayout";
-import StudentProfile from "../pages/student/StudentProfile";
-import EditStudentProfile from "../pages/student/EditStudentProfile";
+import StudentProfile from "../pages/Student/StudentProfile.jsx";
+import EditStudentProfile from "../pages/Student/EditStudentProfile.jsx";
 
-import StudentProjects from "../pages/student/StudentProjects";
-import CreateProject from "../pages/student/CreateProject";
-import ProjectDetails from "../pages/student/ProjectDetails";
-import EditProject from "../pages/student/EditProject";
+import StudentProjects from "../pages/Student/StudentProjects.jsx";
+import CreateProject from "../pages/Student/CreateProject.jsx";
+import ProjectDetails from "../pages/Student/ProjectDetails.jsx";
+import EditProject from "../pages/Student/EditProject.jsx";
 
-import StudentNotes from "../pages/student/StudentNotes";
-import CreateNote from "../pages/student/CreateNote";
-import NoteDetails from "../pages/student/NoteDetails";
-import EditNote from "../pages/student/EditNote";
+import StudentNotes from "../pages/Student/StudentNotes.jsx";
+import CreateNote from "../pages/Student/CreateNote.jsx";
+import NoteDetails from "../pages/Student/NoteDetails";
+import EditNote from "../pages/Student/EditNote";
 
-import StudentInternships from "../pages/student/StudentInternships";
-import InternshipDetails from "../pages/student/InternshipDetails";
+import StudentInternships from "../pages/Student/StudentInternships";
+import InternshipDetails from "../pages/Student/InternshipDetails";
 
-import StudentApplications from "../pages/student/StudentApplications";
-import StudentNotifications from "../pages/student/StudentNotifications";
+import StudentApplications from "../pages/Student/StudentApplications";
+import StudentNotifications from "../pages/Student/StudentNotifications";
 
-import Community from "../pages/student/Community";
+import Community from "../pages/Student/Community";
 
 // ===============================
 // Recruiter
