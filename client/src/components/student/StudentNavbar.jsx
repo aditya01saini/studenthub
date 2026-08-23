@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import {
   FaBell,
   FaUserCircle,
@@ -11,19 +13,112 @@ import { useAuth } from "../../context/AuthContext";
 const StudentNavbar = ({ sidebarOpen, setSidebarOpen }) => {
   const { user } = useAuth();
 
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // ==========================================
+  // DETECT PAGE / CONTAINER SCROLL
+  // ==========================================
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop =
+        window.scrollY ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop;
+
+      setIsScrolled(scrollTop > 20);
+    };
+
+    // Capture scroll events from window + inner containers
+    document.addEventListener("scroll", handleScroll, true);
+
+    // Check initial position
+    handleScroll();
+
+    return () => {
+      document.removeEventListener("scroll", handleScroll, true);
+    };
+  }, []);
+
+  // ==========================================
+  // TOGGLE SIDEBAR
+  // ==========================================
+
+  const handleToggleSidebar = () => {
+    setSidebarOpen((prev) => !prev);
+  };
+
   return (
-    <header className="sticky top-0 z-30 flex min-h-20 items-center justify-between border-b border-slate-200 bg-white px-4 py-3 sm:px-6 lg:px-8">
-      {/* Left */}
-      <div className="flex min-w-0 items-center gap-4">
-        {/* Desktop Sidebar Toggle */}
+    <header
+      className="
+        sticky top-0 z-30
+        flex min-h-20 items-center justify-between
+        border-b border-slate-200
+        bg-white
+        px-4 py-3
+        sm:px-6
+        lg:px-8
+      "
+    >
+      {/* ==========================================
+          LEFT
+      ========================================== */}
+
+      <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+        {/* ==========================================
+            MOBILE HAMBURGER
+        ========================================== */}
+
         <button
           type="button"
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600 transition hover:bg-indigo-100 hover:text-indigo-600 lg:flex"
+          onClick={handleToggleSidebar}
+          aria-label="Open sidebar"
+          title="Open Sidebar"
+          className={`
+            h-10 w-10 shrink-0
+            items-center justify-center
+            rounded-xl
+            bg-slate-100
+            text-slate-600
+            shadow-sm
+            transition-all duration-200
+            hover:bg-indigo-100
+            hover:text-indigo-600
+            lg:hidden
+
+            ${isScrolled ? "hidden" : "flex"}
+          `}
+        >
+          <FaBars className="text-lg" />
+        </button>
+
+        {/* ==========================================
+            DESKTOP SIDEBAR TOGGLE
+        ========================================== */}
+
+        <button
+          type="button"
+          onClick={handleToggleSidebar}
           title={sidebarOpen ? "Hide Sidebar" : "Show Sidebar"}
+          className="
+            hidden
+            h-10 w-10 shrink-0
+            items-center justify-center
+            rounded-xl
+            bg-slate-100
+            text-slate-600
+            transition
+            hover:bg-indigo-100
+            hover:text-indigo-600
+            lg:flex
+          "
         >
           {sidebarOpen ? <FaChevronLeft /> : <FaChevronRight />}
         </button>
+
+        {/* ==========================================
+            WELCOME
+        ========================================== */}
 
         <div className="min-w-0">
           <h2 className="truncate text-lg font-bold text-slate-900 sm:text-xl">
@@ -36,12 +131,22 @@ const StudentNavbar = ({ sidebarOpen, setSidebarOpen }) => {
         </div>
       </div>
 
-      {/* Right */}
+      {/* ==========================================
+          RIGHT
+      ========================================== */}
+
       <div className="ml-3 flex shrink-0 items-center gap-3 sm:gap-5">
         {/* Notification */}
         <button
           type="button"
-          className="relative rounded-full bg-slate-100 p-3 text-slate-600 transition hover:bg-indigo-100 hover:text-indigo-600"
+          className="
+            relative rounded-full
+            bg-slate-100 p-3
+            text-slate-600
+            transition
+            hover:bg-indigo-100
+            hover:text-indigo-600
+          "
         >
           <FaBell />
 
