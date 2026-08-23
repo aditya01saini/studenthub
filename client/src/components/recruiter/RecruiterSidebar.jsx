@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+
 import {
   LayoutDashboard,
   User,
@@ -8,6 +9,7 @@ import {
   FileText,
   Bell,
   LogOut,
+  X,
 } from "lucide-react";
 
 const menuItems = [
@@ -36,38 +38,73 @@ const menuItems = [
     icon: PlusCircle,
     path: "/recruiter/internships/create",
   },
-
   {
     name: "Notifications",
     icon: Bell,
     path: "/recruiter/notifications",
   },
-  
 ];
 
-
-
-const RecruiterSidebar = () => {
+const RecruiterSidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
-
   const { logout } = useAuth();
 
   const handleLogout = () => {
     logout();
-
+    onClose?.();
     navigate("/login");
   };
 
-  return (
-    <aside className="fixed left-0 top-0 z-40 flex h-screen w-72 flex-col border-r border-slate-200 bg-white shadow-sm">
-      {/* Logo */}
-      <div className="border-b border-slate-200 px-6 py-6">
-        <h1 className="text-2xl font-bold text-indigo-600">StudentHub</h1>
+  const handleNavigation = () => {
+    onClose?.();
+  };
 
-        <p className="mt-1 text-sm text-slate-500">Recruiter Panel</p>
+  return (
+    <aside
+      className={`
+        fixed
+        left-0
+        top-0
+        z-50
+        flex
+        h-screen
+        w-72
+        flex-col
+        border-r
+        border-slate-200
+        bg-white
+        shadow-sm
+        transition-transform
+        duration-300
+        ease-in-out
+        lg:translate-x-0
+        ${isOpen ? "translate-x-0" : "-translate-x-full"}
+      `}
+    >
+      {/* =========================
+          HEADER
+      ========================== */}
+      <div className="flex h-20 items-center justify-between border-b border-slate-200 px-6">
+        <div>
+          <h1 className="text-2xl font-bold text-indigo-600">StudentHub</h1>
+
+          <p className="mt-1 text-sm text-slate-500">Recruiter Panel</p>
+        </div>
+
+        {/* Mobile Close Button */}
+        <button
+          type="button"
+          onClick={onClose}
+          className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-800 lg:hidden"
+          aria-label="Close sidebar"
+        >
+          <X size={22} />
+        </button>
       </div>
 
-      {/* Navigation */}
+      {/* =========================
+          NAVIGATION
+      ========================== */}
       <nav className="flex-1 overflow-y-auto p-4">
         <div className="space-y-2">
           {menuItems.map((item) => {
@@ -77,6 +114,7 @@ const RecruiterSidebar = () => {
               <NavLink
                 key={item.name}
                 to={item.path}
+                onClick={handleNavigation}
                 className={({ isActive }) =>
                   `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 ${
                     isActive
@@ -86,6 +124,7 @@ const RecruiterSidebar = () => {
                 }
               >
                 <Icon size={20} />
+
                 <span>{item.name}</span>
               </NavLink>
             );
@@ -93,13 +132,31 @@ const RecruiterSidebar = () => {
         </div>
       </nav>
 
-      {/* Footer */}
+      {/* =========================
+          LOGOUT
+      ========================== */}
       <div className="border-t border-slate-200 p-4">
         <button
+          type="button"
           onClick={handleLogout}
-          className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-red-500 transition-all duration-200 hover:bg-red-50"
+          className="
+            flex
+            w-full
+            items-center
+            gap-3
+            rounded-xl
+            px-4
+            py-3
+            text-sm
+            font-medium
+            text-red-500
+            transition-all
+            duration-200
+            hover:bg-red-50
+          "
         >
           <LogOut size={20} />
+
           <span>Logout</span>
         </button>
       </div>
