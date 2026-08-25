@@ -12,8 +12,14 @@ import ResetPassword from "../pages/Auth/ResetPassword";
 import ProtectedRoute from "./ProtectedRoute";
 
 // ===============================
-// Student
+// AI
+// ===============================
 
+import AIChatPage from "../pages/AI/AIChatPage.jsx";
+
+// ===============================
+// Student
+// ===============================
 
 import StudentDashboard from "../pages/Student/StudentDashboard.jsx";
 import StudentLayout from "../layouts/StudentLayout";
@@ -53,6 +59,7 @@ import RecruiterNotifications from "../pages/Recruiter/RecruiterNotifications";
 import Applicants from "../pages/Recruiter/Applicants";
 import RecruiterApplications from "../pages/Recruiter/RecruiterApplications";
 import RecruiterCommunity from "../pages/Recruiter/RecruiterCommunity";
+
 // ===============================
 // Admin
 // ===============================
@@ -67,6 +74,10 @@ import AdminApplications from "../pages/Admin/AdminApplications";
 import AdminNotifications from "../pages/Admin/AdminNotifications";
 import AdminSettings from "../pages/Admin/AdminSettings";
 
+// ===============================
+// Public
+// ===============================
+
 import PublicInternships from "../pages/public/PublicInternships";
 import PublicInternshipDetails from "../pages/public/PublicInternshipDetails";
 
@@ -75,6 +86,7 @@ import Students from "../pages/public/Students";
 import PublicStudentProfile from "../pages/public/PublicStudentProfile";
 import Projects from "../pages/public/Projects.jsx";
 import PublicProjectDetails from "../pages/public/PublicProjectDetails";
+
 // ===============================
 // App Routes
 // ===============================
@@ -88,12 +100,23 @@ const AppRoutes = () => {
 
       <Route path="/" element={<Landing />} />
 
-      {/* publicRoutes */}
+      {/* ===============================
+          AI Assistant
+      =============================== */}
+
+      <Route path="/ai-chat" element={<AIChatPage />} />
+
+      {/* ===============================
+          Public Routes
+      =============================== */}
+
       <Route path="/internships" element={<PublicInternships />} />
+
       <Route
         path="/internships/:internshipId"
         element={<PublicInternshipDetails />}
       />
+
       <Route path="/students" element={<Students />} />
 
       <Route path="/students/:studentId" element={<PublicStudentProfile />} />
@@ -166,9 +189,9 @@ const AppRoutes = () => {
         <Route path="community" element={<Community />} />
       </Route>
 
-      {/* ===============================
+      {/* 
           Recruiter Protected Routes
-      =============================== */}
+       */}
 
       <Route
         path="/recruiter"
@@ -191,16 +214,18 @@ const AppRoutes = () => {
         <Route path="applications" element={<RecruiterApplications />} />
 
         <Route path="notifications" element={<RecruiterNotifications />} />
+
         <Route path="community" element={<RecruiterCommunity />} />
+
         <Route
           path="internships/:internshipId/applications"
           element={<Applicants />}
         />
       </Route>
 
-      {/* ===============================
+      {/* 
           Admin Protected Routes
-      =============================== */}
+       */}
 
       <Route
         path="/admin"
@@ -227,7 +252,9 @@ const AppRoutes = () => {
         <Route path="internships" element={<AdminInternships />} />
 
         <Route path="applications" element={<AdminApplications />} />
+
         <Route path="notifications" element={<AdminNotifications />} />
+
         <Route path="settings" element={<AdminSettings />} />
       </Route>
     </Routes>

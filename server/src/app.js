@@ -21,18 +21,16 @@ import searchRoutes from "./routes/search.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 
 import statisticsRoutes from "./routes/statistics.routes.js";
+
+import aiRoutes from "./routes/ai.routes.js";
 const app = express();
 
-// ===============================
 // Global Middleware
-// ===============================
 
 app.use(cors());
 app.use(express.json());
 
-// ===============================
 // Health Check
-// ===============================
 
 app.get("/", (req, res) => {
   res.json({
@@ -41,9 +39,7 @@ app.get("/", (req, res) => {
   });
 });
 
-// ===============================
 // API Routes
-// ===============================
 
 app.use("/api/v1/auth", authRoutes);
 
@@ -70,12 +66,13 @@ app.use("/api/v1/search", searchRoutes);
 
 app.use("/api/v1/statistics", statisticsRoutes);
 
-// ===============================
 // Global Error Handler
-// ===============================
 
 app.use(errorHandler);
 
 app.use("/api/v1/admin", adminRoutes);
+
+//ai
+app.use("/api/v1/ai", aiRoutes);
 
 export default app;

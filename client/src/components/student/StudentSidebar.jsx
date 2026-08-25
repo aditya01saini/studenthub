@@ -11,6 +11,7 @@ import {
   FaFileAlt,
   FaUsers,
   FaBell,
+  FaRobot,
   FaSignOutAlt,
   FaTimes,
 } from "react-icons/fa";
@@ -58,6 +59,16 @@ const menuItems = [
     path: "/student/notifications",
     icon: FaBell,
   },
+
+  // ==========================================
+  // AI ASSISTANT
+  // ==========================================
+
+  {
+    name: "AI Assistant",
+    path: "/ai-chat",
+    icon: FaRobot,
+  },
 ];
 
 const StudentSidebar = ({ sidebarOpen, setSidebarOpen }) => {
@@ -70,13 +81,14 @@ const StudentSidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Only close sidebar on mobile/tablet
       if (window.innerWidth < 1024 && sidebarOpen) {
         setSidebarOpen(false);
       }
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -118,9 +130,7 @@ const StudentSidebar = ({ sidebarOpen, setSidebarOpen }) => {
           transition-transform duration-300
 
           ${
-            sidebarOpen
-              ? "translate-x-0"
-              : "-translate-x-full lg:translate-x-0"
+            sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
           }
         `}
       >
@@ -138,9 +148,7 @@ const StudentSidebar = ({ sidebarOpen, setSidebarOpen }) => {
             </h1>
           </div>
 
-          {/* ==========================================
-              MOBILE CLOSE BUTTON
-          ========================================== */}
+          {/* MOBILE CLOSE BUTTON */}
 
           <button
             type="button"
@@ -183,6 +191,7 @@ const StudentSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                         rounded-xl px-4 py-3
                         font-medium
                         transition
+
                         ${
                           isActive
                             ? "bg-indigo-600 text-white shadow-sm"
