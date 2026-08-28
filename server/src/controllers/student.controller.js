@@ -12,7 +12,9 @@ import {
   getStudentNotes,
   getStudentDashboard,
   searchStudents,
+  testResumeTextExtraction,
 } from "../services/student.service.js";
+import { analyzeStudentResume } from "../services/resumeAnalysis.service.js";
 
 export const getStudentProfile = asyncHandler(async (req, res) => {
   const result = await getProfile(req.user._id);
@@ -92,3 +94,23 @@ export const searchStudentsList = asyncHandler(async (req, res) => {
 
   return res.status(200).json(result);
 });
+
+export const testResumeTextExtractionController = async (req, res, next) => {
+  try {
+    const result = await testResumeTextExtraction(req.user.id);
+
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const analyzeStudentResumeController = async (req, res, next) => {
+  try {
+    const result = await analyzeStudentResume(req.user.id);
+
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};

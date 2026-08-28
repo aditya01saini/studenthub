@@ -9,6 +9,7 @@ import fs from "fs";
 import { calculateStudentScore } from "../utils/studentScore.js";
 
 import { uploadToCloudinary } from "./upload.service.js";
+import { extractTextFromPDF } from "./resumeParser.service.js";
 
 export const getProfile = async (userId) => {
   const profile = await StudentProfile.findOne({
@@ -112,7 +113,7 @@ export const updateResume = async (userId, file) => {
   const resumeUrl = await uploadToCloudinary(
     file.path,
     "studenthub/resumes",
-    "raw",
+    "image",
   );
 
   profile.resume = resumeUrl;
@@ -673,5 +674,31 @@ export const searchStudents = async (query, page = 1, limit = 10) => {
     hasPreviousPage: page > 1,
 
     students,
+  };
+};
+
+export const testResumeTextExtraction = async (userId) => {
+  const student = await StudentProfile.findOne({
+    user: userId,
+  });
+
+  if (!student) {
+    const error = new Error("Student profile not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (!student.resume) {
+    const error = new Error("Please upload your resume first.");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const resumeText = await extractTextFromPDF(student.resume);
+
+  return {
+    success: true,
+    message: "Resume text extracted successfully.",
+    text: resumeText,
   };
 };

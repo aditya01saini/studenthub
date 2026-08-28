@@ -12,6 +12,8 @@ import {
   getStudentNotesList,
   getStudentDashboardData,
   searchStudentsList,
+  testResumeTextExtractionController,
+  analyzeStudentResumeController,
 } from "../controllers/student.controller.js";
 import { protect } from "../middlewares/auth.middleware.js";
 import authorize from "../middlewares/role.middleware.js";
@@ -64,5 +66,12 @@ router.get("/:studentId/projects", getStudentProjectsList);
 
 router.get("/:studentId/notes", getStudentNotesList);
 router.get("/:studentId", getPublicStudentProfile);
+router.get(
+  "/resume/test-extraction",
+  protect,
+  testResumeTextExtractionController,
+);
+
+router.post("/resume/analyze", protect, analyzeStudentResumeController);
 
 export default router;
