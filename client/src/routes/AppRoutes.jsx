@@ -88,6 +88,12 @@ import Projects from "../pages/public/Projects.jsx";
 import PublicProjectDetails from "../pages/public/PublicProjectDetails";
 
 // ===============================
+// Resume Analyzer
+// ===============================
+
+import ResumeAnalyzer from "../pages/Student/ResumeAnalyzer.jsx";
+
+// ===============================
 // App Routes
 // ===============================
 
@@ -119,11 +125,27 @@ const AppRoutes = () => {
 
       <Route path="/students" element={<Students />} />
 
-      <Route path="/students/:studentId" element={<PublicStudentProfile />} />
+      <Route
+        path="/students/:studentId"
+        element={<PublicStudentProfile />}
+      />
 
       <Route path="/projects" element={<Projects />} />
 
-      <Route path="/projects/:projectId" element={<PublicProjectDetails />} />
+      <Route
+        path="/projects/:projectId"
+        element={<PublicProjectDetails />}
+      />
+
+      {/* ===============================
+          Resume Analyzer
+          Public Page
+      =============================== */}
+
+      <Route
+        path="/resume-analyzer"
+        element={<ResumeAnalyzer />}
+      />
 
       {/* ===============================
           Authentication
@@ -133,13 +155,25 @@ const AppRoutes = () => {
 
       <Route path="/register" element={<ChooseRole />} />
 
-      <Route path="/register/student" element={<StudentRegister />} />
+      <Route
+        path="/register/student"
+        element={<StudentRegister />}
+      />
 
-      <Route path="/register/recruiter" element={<RecruiterRegister />} />
+      <Route
+        path="/register/recruiter"
+        element={<RecruiterRegister />}
+      />
 
-      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route
+        path="/forgot-password"
+        element={<ForgotPassword />}
+      />
 
-      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route
+        path="/reset-password"
+        element={<ResetPassword />}
+      />
 
       {/* ===============================
           Student Protected Routes
@@ -153,45 +187,90 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       >
-        <Route path="dashboard" element={<StudentDashboard />} />
+        <Route
+          path="dashboard"
+          element={<StudentDashboard />}
+        />
 
-        <Route path="profile" element={<StudentProfile />} />
+        <Route
+          path="profile"
+          element={<StudentProfile />}
+        />
 
-        <Route path="profile/edit" element={<EditStudentProfile />} />
+        <Route
+          path="profile/edit"
+          element={<EditStudentProfile />}
+        />
 
-        <Route path="projects" element={<StudentProjects />} />
+        <Route
+          path="projects"
+          element={<StudentProjects />}
+        />
 
-        <Route path="projects/new" element={<CreateProject />} />
+        <Route
+          path="projects/new"
+          element={<CreateProject />}
+        />
 
-        <Route path="projects/:projectId" element={<ProjectDetails />} />
+        <Route
+          path="projects/:projectId"
+          element={<ProjectDetails />}
+        />
 
-        <Route path="projects/:projectId/edit" element={<EditProject />} />
+        <Route
+          path="projects/:projectId/edit"
+          element={<EditProject />}
+        />
 
-        <Route path="notes" element={<StudentNotes />} />
+        <Route
+          path="notes"
+          element={<StudentNotes />}
+        />
 
-        <Route path="notes/new" element={<CreateNote />} />
+        <Route
+          path="notes/new"
+          element={<CreateNote />}
+        />
 
-        <Route path="notes/:noteId" element={<NoteDetails />} />
+        <Route
+          path="notes/:noteId"
+          element={<NoteDetails />}
+        />
 
-        <Route path="notes/:noteId/edit" element={<EditNote />} />
+        <Route
+          path="notes/:noteId/edit"
+          element={<EditNote />}
+        />
 
-        <Route path="internships" element={<StudentInternships />} />
+        <Route
+          path="internships"
+          element={<StudentInternships />}
+        />
 
         <Route
           path="internships/:internshipId"
           element={<InternshipDetails />}
         />
 
-        <Route path="applications" element={<StudentApplications />} />
+        <Route
+          path="applications"
+          element={<StudentApplications />}
+        />
 
-        <Route path="notifications" element={<StudentNotifications />} />
+        <Route
+          path="notifications"
+          element={<StudentNotifications />}
+        />
 
-        <Route path="community" element={<Community />} />
+        <Route
+          path="community"
+          element={<Community />}
+        />
       </Route>
 
-      {/* 
+      {/* ===============================
           Recruiter Protected Routes
-       */}
+      =============================== */}
 
       <Route
         path="/recruiter"
@@ -201,21 +280,45 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       >
-        <Route path="dashboard" element={<RecruiterDashboard />} />
+        <Route
+          path="dashboard"
+          element={<RecruiterDashboard />}
+        />
 
-        <Route path="profile" element={<RecruiterProfile />} />
+        <Route
+          path="profile"
+          element={<RecruiterProfile />}
+        />
 
-        <Route path="internships" element={<MyInternships />} />
+        <Route
+          path="internships"
+          element={<MyInternships />}
+        />
 
-        <Route path="internships/create" element={<CreateInternship />} />
+        <Route
+          path="internships/create"
+          element={<CreateInternship />}
+        />
 
-        <Route path="internships/edit/:id" element={<EditInternship />} />
+        <Route
+          path="internships/edit/:id"
+          element={<EditInternship />}
+        />
 
-        <Route path="applications" element={<RecruiterApplications />} />
+        <Route
+          path="applications"
+          element={<RecruiterApplications />}
+        />
 
-        <Route path="notifications" element={<RecruiterNotifications />} />
+        <Route
+          path="notifications"
+          element={<RecruiterNotifications />}
+        />
 
-        <Route path="community" element={<RecruiterCommunity />} />
+        <Route
+          path="community"
+          element={<RecruiterCommunity />}
+        />
 
         <Route
           path="internships/:internshipId/applications"
@@ -223,9 +326,9 @@ const AppRoutes = () => {
         />
       </Route>
 
-      {/* 
+      {/* ===============================
           Admin Protected Routes
-       */}
+      =============================== */}
 
       <Route
         path="/admin"
@@ -235,30 +338,44 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       >
-        {/* Admin Dashboard */}
+        <Route
+          path="dashboard"
+          element={<AdminDashboard />}
+        />
 
-        <Route path="dashboard" element={<AdminDashboard />} />
+        <Route
+          path="users"
+          element={<AdminUsers />}
+        />
 
-        {/* User Management */}
+        <Route
+          path="recruiters"
+          element={<AdminRecruiters />}
+        />
 
-        <Route path="users" element={<AdminUsers />} />
+        <Route
+          path="internships"
+          element={<AdminInternships />}
+        />
 
-        {/* Recruiter Management */}
+        <Route
+          path="applications"
+          element={<AdminApplications />}
+        />
 
-        <Route path="recruiters" element={<AdminRecruiters />} />
+        <Route
+          path="notifications"
+          element={<AdminNotifications />}
+        />
 
-        {/* Internship Management */}
-
-        <Route path="internships" element={<AdminInternships />} />
-
-        <Route path="applications" element={<AdminApplications />} />
-
-        <Route path="notifications" element={<AdminNotifications />} />
-
-        <Route path="settings" element={<AdminSettings />} />
+        <Route
+          path="settings"
+          element={<AdminSettings />}
+        />
       </Route>
     </Routes>
   );
 };
 
 export default AppRoutes;
+

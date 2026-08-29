@@ -12,22 +12,39 @@ import FAQ from "../../components/landing/FAQ/FAQ";
 import CTA from "../../components/landing/CTA/CTA";
 import Footer from "../../components/landing/Footer/Footer";
 
+// Resume Analyzer
+// import ResumeAnalyzer from "../../components/landing/ResumeAnalyzer/ResumeAnalyzer";
 
 const Home = () => {
   return (
     <>
       <Navbar />
+
       <Hero />
+
       <Statistics />
-      <Features/>
-      <WhyChooseUs/>
+
+      <Features />
+
+      <WhyChooseUs />
+
       <HowItWorks />
+
       <TopStudents />
+
       <LatestProjects />
+
       <LatestInternships />
+
+      {/* AI Resume Analyzer
+      <ResumeAnalyzer /> */}
+
       <Testimonials />
+
       <FAQ />
+
       <CTA />
+
       <Footer />
     </>
   );

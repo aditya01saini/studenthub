@@ -23,6 +23,7 @@ import adminRoutes from "./routes/admin.routes.js";
 import statisticsRoutes from "./routes/statistics.routes.js";
 
 import aiRoutes from "./routes/ai.routes.js";
+import resumeAnalysisRoutes from "./routes/resumeAnalysis.routes.js";
 const app = express();
 
 // Global Middleware
@@ -74,5 +75,7 @@ app.use("/api/v1/admin", adminRoutes);
 
 //ai
 app.use("/api/v1/ai", aiRoutes);
+
+app.use("/api/v1/resume-analysis", resumeAnalysisRoutes);
 
 export default app;

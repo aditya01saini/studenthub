@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
+import { useState } from "react";
 
 import AuthLayout from "../../layouts/AuthLayout";
 
@@ -9,13 +10,14 @@ import PasswordInput from "../../components/auth/PasswordInput";
 
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { loginUser } from "../../services/auth.service";
 import { useAuth } from "../../context/AuthContext";
+
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const { login } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -26,6 +28,16 @@ const Login = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // ==========================================
+  // PREVIOUS PAGE
+  // ==========================================
+
+  const from = location.state?.from;
+
+  // ==========================================
+  // HANDLE INPUT
+  // ==========================================
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -34,6 +46,10 @@ const Login = () => {
       [name]: value,
     }));
   };
+
+  // ==========================================
+  // LOGIN
+  // ==========================================
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,7 +65,28 @@ const Login = () => {
       });
 
       if (data.success) {
+        // Save user + token
         login(data.user, data.token);
+
+        // ==========================================
+        // RESUME ANALYZER FLOW
+        // ==========================================
+
+        if (from === "/resume-analyzer") {
+          // Resume Analyzer sirf student ke liye
+          if (data.user.role === "student") {
+            navigate("/resume-analyzer", { replace: true });
+            return;
+          }
+
+          // Recruiter/Admin Resume Analyzer access nahi kar sakte
+          navigate("/", { replace: true });
+          return;
+        }
+
+        // ==========================================
+        // NORMAL LOGIN FLOW
+        // ==========================================
 
         if (data.user.role === "student") {
           navigate("/student/dashboard");
@@ -68,6 +105,7 @@ const Login = () => {
       setLoading(false);
     }
   };
+
   return (
     <AuthLayout>
       <AuthHeader
@@ -76,6 +114,8 @@ const Login = () => {
       />
 
       <form className="space-y-6" onSubmit={handleSubmit}>
+        {/* Email */}
+
         <Input
           label="Email Address"
           type="email"
@@ -85,6 +125,9 @@ const Login = () => {
           placeholder="Enter your email"
           required
         />
+
+        {/* Password */}
+
         <PasswordInput
           label="Password"
           name="password"
@@ -93,7 +136,9 @@ const Login = () => {
           placeholder="Enter your password"
           required
         />
+
         {/* Remember */}
+
         <div className="flex items-center justify-between text-sm">
           <label className="flex cursor-pointer items-center gap-2 text-slate-600">
             <input type="checkbox" className="h-4 w-4 accent-indigo-600" />
@@ -107,10 +152,16 @@ const Login = () => {
             Forgot Password?
           </Link>
         </div>
+
+        {/* Error */}
+
         {error && <p className="text-sm font-medium text-red-500">{error}</p>}
+
+        {/* Login Button */}
+
         <Button type="submit" className="w-full" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
-        </Button>{" "}
+        </Button>
       </form>
 
       {/* Divider */}
@@ -125,10 +176,15 @@ const Login = () => {
 
       {/* Google */}
 
-      <button className="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-300 py-3 font-semibold transition hover:border-indigo-600 hover:text-indigo-600">
+      <button
+        type="button"
+        className="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-300 py-3 font-semibold transition hover:border-indigo-600 hover:text-indigo-600"
+      >
         <FaGoogle />
         Continue with Google
       </button>
+
+      {/* Footer */}
 
       <AuthFooter
         text="Don't have an account?"

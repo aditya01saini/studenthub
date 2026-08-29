@@ -47,12 +47,25 @@ const Hero = () => {
           {/* Buttons */}
 
           <div className="mt-7 flex flex-wrap justify-center gap-3 sm:gap-4 lg:justify-start">
+            {/* Get Started */}
+
             <Link
               to="/register"
               className="rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl sm:px-7"
             >
               Get Started
             </Link>
+
+            {/* Resume Analyzer */}
+
+            <Link
+              to="/resume-analyzer"
+              className="rounded-xl border border-indigo-200 bg-white px-6 py-3 text-sm font-semibold text-indigo-600 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-indigo-300 hover:bg-indigo-50 hover:shadow-md sm:px-7"
+            >
+              🤖 Analyze My Resume
+            </Link>
+
+            {/* Explore Features */}
 
             <a
               href="#features"
@@ -66,6 +79,7 @@ const Hero = () => {
 
           <div className="mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-slate-500 lg:justify-start sm:text-sm">
             <span>✓ Student Community</span>
+            <span>✓ AI Resume Analyzer</span>
             <span>✓ Project Showcase</span>
             <span>✓ Internship Opportunities</span>
           </div>
@@ -178,17 +192,23 @@ const Hero = () => {
               <div className="mt-4 grid grid-cols-3 gap-2 border-t border-slate-100 pt-4">
                 <div className="text-center">
                   <p className="text-sm font-bold text-slate-800">24</p>
-                  <p className="text-[10px] text-slate-400">Applications</p>
+                  <p className="text-[10px] text-slate-400">
+                    Applications
+                  </p>
                 </div>
 
                 <div className="border-x border-slate-100 text-center">
                   <p className="text-sm font-bold text-slate-800">18</p>
-                  <p className="text-[10px] text-slate-400">Skills</p>
+                  <p className="text-[10px] text-slate-400">
+                    Skills
+                  </p>
                 </div>
 
                 <div className="text-center">
                   <p className="text-sm font-bold text-slate-800">92%</p>
-                  <p className="text-[10px] text-slate-400">Profile</p>
+                  <p className="text-[10px] text-slate-400">
+                    Profile
+                  </p>
                 </div>
               </div>
             </div>
@@ -200,3 +220,4 @@ const Hero = () => {
 };
 
 export default Hero;
+

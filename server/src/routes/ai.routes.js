@@ -7,10 +7,16 @@ import {
   deleteAIChat,
 } from "../controllers/ai.controller.js";
 
+import {
+  analyzeResumeController,
+  analyzeGuestResumeController,
+} from "../controllers/resumeAnalysis.controller.js";
+
 import { optionalAuth } from "../middlewares/optionalAuth.middleware.js";
 import { protect } from "../middlewares/auth.middleware.js";
-
 import aiRateLimit from "../middlewares/aiRateLimit.middleware.js";
+
+import { uploadResume } from "../middlewares/upload.middleware.js";
 
 const router = express.Router();
 
@@ -25,6 +31,28 @@ router.post(
   aiRateLimit,
   optionalAuth,
   chatWithAI,
+);
+
+// ==========================================
+// GUEST RESUME ANALYZER
+// LOGIN NOT REQUIRED
+// ==========================================
+
+router.post(
+  "/analyze-guest",
+  uploadResume.single("resume"),
+  analyzeGuestResumeController,
+);
+
+// ==========================================
+// STUDENT RESUME ANALYZER
+// LOGGED-IN STUDENT
+// ==========================================
+
+router.post(
+  "/analyze",
+  protect,
+  analyzeResumeController,
 );
 
 // ==========================================
