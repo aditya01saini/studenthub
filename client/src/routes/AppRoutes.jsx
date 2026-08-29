@@ -171,13 +171,13 @@ const AppRoutes = () => {
       />
 
       <Route
-        path="/reset-password"
+        path="/reset-password/:token"
         element={<ResetPassword />}
       />
 
-      {/* ===============================
+      {/* 
           Student Protected Routes
-      =============================== */}
+       */}
 
       <Route
         path="/student"

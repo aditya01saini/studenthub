@@ -1,15 +1,27 @@
 import asyncHandler from "../utils/asyncHandler.js";
+
 import {
   registerUser,
   loginUser,
   updateUserProfile,
   changeUserPassword,
+  forgotUserPassword,
+  resetUserPassword,
 } from "../services/auth.service.js";
+
+// ==========================================
+// REGISTER
+// ==========================================
+
 export const register = asyncHandler(async (req, res) => {
   const result = await registerUser(req.body);
 
   return res.status(201).json(result);
 });
+
+// ==========================================
+// LOGIN
+// ==========================================
 
 export const login = asyncHandler(async (req, res) => {
   const result = await loginUser(req.body);
@@ -17,29 +29,44 @@ export const login = asyncHandler(async (req, res) => {
   return res.status(200).json(result);
 });
 
-export const forgotPassword = async (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Forgot Password API Working",
-  });
-};
+// ==========================================
+// FORGOT PASSWORD
+// ==========================================
 
-export const resetPassword = async (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Reset Password API Working",
-  });
-};
+export const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  const result = await forgotUserPassword(email);
+
+  return res.status(200).json(result);
+});
+
+// ==========================================
+// RESET PASSWORD
+// ==========================================
+
+export const resetPassword = asyncHandler(async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  const result = await resetUserPassword(token, password);
+
+  return res.status(200).json(result);
+});
+
+// ==========================================
+// GET CURRENT USER
+// ==========================================
 
 export const getMe = asyncHandler(async (req, res) => {
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     user: req.user,
   });
 });
 
 // ==========================================
-// Update Profile
+// UPDATE PROFILE
 // ==========================================
 
 export const updateProfile = asyncHandler(async (req, res) => {
@@ -49,7 +76,7 @@ export const updateProfile = asyncHandler(async (req, res) => {
 });
 
 // ==========================================
-// Change Password
+// CHANGE PASSWORD
 // ==========================================
 
 export const changePassword = asyncHandler(async (req, res) => {

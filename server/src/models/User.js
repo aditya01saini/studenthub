@@ -33,18 +33,38 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+
     isActive: {
       type: Boolean,
       default: true,
     },
+
     lastLoginAt: {
       type: Date,
+    },
+
+    // ==========================================
+    // PASSWORD RESET
+    // ==========================================
+
+    resetPasswordToken: {
+      type: String,
+      default: null,
+    },
+
+    resetPasswordExpire: {
+      type: Date,
+      default: null,
     },
   },
   {
     timestamps: true,
   },
 );
+
+// ==========================================
+// HASH PASSWORD
+// ==========================================
 
 userSchema.pre("save", async function () {
   if (!this.isModified("password")) {
@@ -55,6 +75,10 @@ userSchema.pre("save", async function () {
 
   this.password = await bcrypt.hash(this.password, salt);
 });
+
+// ==========================================
+// COMPARE PASSWORD
+// ==========================================
 
 userSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
